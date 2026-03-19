@@ -27,6 +27,11 @@
         <button class="filter-btn" onclick="filtrarExamen()">
             <i>📝</i> Solo normas de examen
         </button>
+        
+        <button class="filter-btn" onclick="IrAExamen()">
+            <i>📝</i>Ir al  examen📝
+        </button>
+        
         <button class="filter-btn" onclick="resetFiltro()">
             <i>🔄</i> Todas las normas
         </button>
@@ -865,6 +870,9 @@
 
         // Inicializar
         renderizarCategorias();
+        IrAExamen(){
+        window.location ='/test.html'
+        }
     </script>
 </body>
 </html>
