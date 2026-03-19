@@ -1,3 +1,4 @@
+
         * {
             margin: 0;
             padding: 0;
@@ -12,7 +13,6 @@
             padding: 20px;
         }
 
-        /* Header */
         .exam-header {
             background: linear-gradient(135deg, #0b1622 0%, #1e2a3a 100%);
             color: white;
@@ -60,7 +60,6 @@
             color: #e63946;
         }
 
-        /* Panel de control */
         .control-panel {
             background: white;
             border-radius: 20px;
@@ -136,7 +135,6 @@
             background: #228176;
         }
 
-        /* Panel de examen */
         .exam-container {
             background: white;
             border-radius: 30px;
@@ -260,7 +258,6 @@
             margin-top: 30px;
         }
 
-        /* Resultados */
         .results-container {
             background: white;
             border-radius: 30px;
@@ -349,27 +346,15 @@
             margin-left: 10px;
         }
 
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 50px;
+        .badge-norma {
+            background: #1e2a3a;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            margin-left: 10px;
         }
 
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #eef2f6;
-            border-top-color: #e63946;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
             .exam-header h1 {
                 font-size: 1.8em;
@@ -388,4 +373,4 @@
                 flex-direction: column;
             }
         }
-    
+   
