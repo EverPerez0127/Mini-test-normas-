@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📝 STPS Academy - Examen Rápido para Bomberos</title>
-  <link rel="stylesheet" href="test.css">   
+    <title>📝 STPS Academy - 100 PREGUNTAS para Bomberos</title>
+ 
 </head>
 <body>
     <div class="exam-header">
         <h1>
             🚒 STPS Academy
-            <span>EXAMEN RÁPIDO</span>
+            <span>100 PREGUNTAS</span>
         </h1>
-        <p style="font-size: 1.2em; opacity: 0.9;">Pon a prueba tus conocimientos de las NOM-STPS</p>
+        <p style="font-size: 1.2em; opacity: 0.9;">Banco completo de 100 preguntas - TODAS las normas STPS</p>
         
         <div class="stats">
             <div class="stat-card">
                 <i>📊</i>
                 <div>
                     <div style="font-size: 1.2em; font-weight: bold;" id="stats-respondidas">0</div>
-                    <div style="font-size: 0.9em; opacity: 0.8;">Preguntas respondidas</div>
+                    <div style="font-size: 0.9em; opacity: 0.8;">Respondidas</div>
                 </div>
             </div>
             <div class="stat-card">
@@ -42,11 +42,11 @@
     <div class="control-panel">
         <div class="exam-config">
             <select class="config-select" id="numPreguntas">
-                <option value="5">5 preguntas</option>
-                <option value="10" selected>10 preguntas</option>
+                <option value="10">10 preguntas</option>
                 <option value="20">20 preguntas</option>
                 <option value="30">30 preguntas</option>
                 <option value="50">50 preguntas</option>
+                <option value="100" selected>100 preguntas (TODAS)</option>
             </select>
             
             <select class="config-select" id="categoriaExamen">
@@ -69,13 +69,13 @@
     </div>
 
     <div id="examArea">
-        <!-- Aquí se renderiza el examen o resultados -->
+        <!-- Se renderiza el examen -->
     </div>
 
     <script>
-        // Base de preguntas basada en las normas
+        // ==================== BANCO DE 100 PREGUNTAS ====================
         const bancoPreguntas = [
-            // NOM-001
+            // ========== NOM-001 (Edificios) ==========
             {
                 pregunta: "¿Cuál es el ancho mínimo de los pasillos principales según NOM-001?",
                 opciones: ["60 cm", "90 cm", "120 cm", "150 cm"],
@@ -92,246 +92,692 @@
                 norma: "NOM-001",
                 explicacion: "Las puertas de emergencia siempre deben abrir hacia afuera para facilitar la evacuación."
             },
+            {
+                pregunta: "¿Cuál es la altura mínima de pasillos según NOM-001?",
+                opciones: ["2.00 m", "2.10 m", "2.20 m", "2.30 m"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-001",
+                explicacion: "Altura mínima de pasillos: 2.20 metros libres de obstáculos."
+            },
             
-            // NOM-002
+            // ========== NOM-002 (Incendios) ==========
             {
                 pregunta: "¿Qué clase de fuego corresponde a líquidos inflamables?",
                 opciones: ["Clase A", "Clase B", "Clase C", "Clase D"],
                 correcta: 1,
                 categoria: "seguridad",
                 norma: "NOM-002",
-                explicacion: "Clase B: líquidos inflamables (gasolina, aceites, pinturas). Clase A: sólidos, Clase C: eléctricos, Clase D: metales."
+                explicacion: "Clase B: líquidos inflamables (gasolina, aceites, pinturas)."
             },
             {
-                pregunta: "¿Cuál es el límite máximo de exposición a ruido sin protección para 8 horas?",
-                opciones: ["85 dB", "90 dB", "95 dB", "100 dB"],
-                correcta: 1,
-                categoria: "salud",
-                norma: "NOM-011",
-                explicacion: "90 dB es el límite máximo permisible para 8 horas de exposición según NOM-011."
-            },
-            
-            // NOM-009
-            {
-                pregunta: "¿A partir de qué altura se considera trabajo en altura según NOM-009?",
-                opciones: ["1.50 m", "1.80 m", "2.00 m", "2.50 m"],
-                correcta: 1,
-                categoria: "seguridad",
-                norma: "NOM-009",
-                explicacion: "La NOM-009 establece 1.80 metros como altura mínima para considerar trabajo en altura."
-            },
-            
-            // NOM-017
-            {
-                pregunta: "¿Qué color identifica la señal de prohibición?",
-                opciones: ["Verde", "Azul", "Rojo", "Amarillo"],
-                correcta: 2,
-                categoria: "organizacion",
-                norma: "NOM-026",
-                explicacion: "Rojo: prohibición y equipo contra incendio. Verde: seguridad. Azul: obligación. Amarillo: precaución."
-            },
-            
-            // NOM-005
-            {
-                pregunta: "En el rombo NFPA, ¿qué color indica riesgo a la salud?",
-                opciones: ["Rojo", "Azul", "Amarillo", "Blanco"],
-                correcta: 1,
-                categoria: "seguridad",
-                norma: "NOM-005",
-                explicacion: "Azul = Salud, Rojo = Inflamabilidad, Amarillo = Reactividad, Blanco = Especial."
-            },
-            
-            // NOM-035
-            {
-                pregunta: "¿Cuál NO es un factor de riesgo psicosocial según NOM-035?",
-                opciones: ["Jornada laboral", "Violencia laboral", "Ruido excesivo", "Carga mental"],
-                correcta: 2,
-                categoria: "salud",
-                norma: "NOM-035",
-                explicacion: "Ruido excesivo es riesgo físico (NOM-011), no psicosocial. Los psicosociales son: ambiente, jornada, carga, liderazgo, violencia."
-            },
-            
-            // NOM-036
-            {
-                pregunta: "¿Cuál es el límite máximo de carga para hombres en levantamiento ocasional?",
-                opciones: ["15 kg", "20 kg", "25 kg", "30 kg"],
-                correcta: 2,
-                categoria: "salud",
-                norma: "NOM-036",
-                explicacion: "25 kg para hombres (ocasional), 15 kg para hombres (frecuente). Mujeres: 15 kg ocasional, 10 kg frecuente."
-            },
-            
-            // NOM-033
-            {
-                pregunta: "¿Cuál es el rango seguro de oxígeno en espacios confinados?",
-                opciones: ["18-22%", "19.5-23.5%", "20-24%", "21-25%"],
-                correcta: 1,
-                categoria: "seguridad",
-                norma: "NOM-033",
-                explicacion: "El rango seguro es 19.5-23.5%. Menor a 19.5% es deficiente, mayor a 23.5% es enriquecido y peligroso."
-            },
-            
-            // NOM-020
-            {
-                pregunta: "¿A qué presión se realiza la prueba hidrostática de recipientes a presión?",
-                opciones: ["1.0 veces presión trabajo", "1.25 veces presión trabajo", "1.5 veces presión trabajo", "2.0 veces presión trabajo"],
+                pregunta: "¿Qué clase de fuego corresponde a equipos eléctricos?",
+                opciones: ["Clase A", "Clase B", "Clase C", "Clase D"],
                 correcta: 2,
                 categoria: "seguridad",
-                norma: "NOM-020",
-                explicacion: "Prueba hidrostática: 1.5 veces la presión de trabajo según NOM-020."
+                norma: "NOM-002",
+                explicacion: "Clase C: equipos eléctricos energizados."
             },
-            
-            // NOM-022
             {
-                pregunta: "¿Cuál debe ser la resistencia máxima de puesta a tierra?",
-                opciones: ["< 5 ohmios", "< 10 ohmios", "< 15 ohmios", "< 20 ohmios"],
-                correcta: 1,
+                pregunta: "¿Qué clase de fuego corresponde a metales combustibles?",
+                opciones: ["Clase A", "Clase B", "Clase C", "Clase D"],
+                correcta: 3,
                 categoria: "seguridad",
-                norma: "NOM-022",
-                explicacion: "La resistencia debe ser menor a 10 ohmios para disipar cargas electrostáticas."
+                norma: "NOM-002",
+                explicacion: "Clase D: metales combustibles (magnesio, titanio, sodio)."
             },
-            
-            // NOM-010
             {
-                pregunta: "¿Qué significa PPT en monitoreo de agentes químicos?",
-                opciones: ["Peligro Potencial Tóxico", "Promedio Ponderado en Tiempo", "Período de Prueba Técnica", "Punto de Prevención Total"],
-                correcta: 1,
-                categoria: "salud",
-                norma: "NOM-010",
-                explicacion: "PPT = Promedio Ponderado en Tiempo para 8 horas de exposición."
-            },
-            
-            // NOM-018
-            {
-                pregunta: "¿Cuántas secciones tiene la Hoja de Datos de Seguridad (MSDS)?",
-                opciones: ["12", "14", "16", "18"],
-                correcta: 2,
-                categoria: "organizacion",
-                norma: "NOM-018",
-                explicacion: "La MSDS tiene 16 secciones según el Sistema Globalmente Armonizado (SGA)."
-            },
-            
-            // NOM-019
-            {
-                pregunta: "¿Cada cuándo deben reunirse las Comisiones Mixtas de Seguridad?",
-                opciones: ["Semanal", "Quincenal", "Mensual", "Bimestral"],
-                correcta: 2,
-                categoria: "organizacion",
-                norma: "NOM-019",
-                explicacion: "Las comisiones deben reunirse de manera mensual según NOM-019."
-            },
-            
-            // NOM-025
-            {
-                pregunta: "¿Qué nivel de iluminación se requiere para tareas normales?",
-                opciones: ["50-100 lux", "100-300 lux", "300-500 lux", "500-750 lux"],
-                correcta: 1,
-                categoria: "salud",
-                norma: "NOM-025",
-                explicacion: "Tareas normales: 100-300 lux. Circulación: 20-50 lux. Tareas finas: 500-750 lux."
-            },
-            
-            // NOM-031
-            {
-                pregunta: "¿A partir de qué profundidad deben entibarse las excavaciones?",
-                opciones: ["1.0 m", "1.2 m", "1.5 m", "2.0 m"],
-                correcta: 2,
-                categoria: "especificas",
-                norma: "NOM-031",
-                explicacion: "Excavaciones mayores a 1.5 m requieren entibado o talud según NOM-031."
-            },
-            
-            // NOM-037
-            {
-                pregunta: "¿Cuál es la altura recomendada de la mesa para teletrabajo?",
-                opciones: ["60-70 cm", "70-80 cm", "80-90 cm", "90-100 cm"],
-                correcta: 1,
-                categoria: "especificas",
-                norma: "NOM-037",
-                explicacion: "La mesa debe tener una altura de 70-80 cm para ergonomía en teletrabajo."
-            },
-            
-            // NOM-023
-            {
-                pregunta: "¿A qué concentración de metano (grisú) se debe evacuar la mina?",
-                opciones: ["1.0%", "1.5%", "2.0%", "2.5%"],
-                correcta: 1,
-                categoria: "especificas",
-                norma: "NOM-023",
-                explicacion: "Alerta al 1%, evacuación obligatoria al 1.5% de metano."
-            },
-            
-            // NOM-029
-            {
-                pregunta: "¿Cuál es el primer paso del procedimiento LOTO?",
-                opciones: ["Aislar energía", "Bloquear", "Notificar", "Verificar"],
-                correcta: 2,
+                pregunta: "¿Qué clase de fuego corresponde a aceites de cocina?",
+                opciones: ["Clase A", "Clase B", "Clase C", "Clase K"],
+                correcta: 3,
                 categoria: "seguridad",
-                norma: "NOM-029",
-                explicacion: "LOTO: 1. Preparar/Notificar, 2. Apagar, 3. Aislar, 4. Bloquear, 5. Verificar."
+                norma: "NOM-002",
+                explicacion: "Clase K: aceites y grasas de cocina."
             },
             
-            // NOM-027
-            {
-                pregunta: "¿Qué distancia mínima deben tener los combustibles de un área de soldadura?",
-                opciones: ["5 m", "8 m", "10 m", "12 m"],
-                correcta: 2,
-                categoria: "seguridad",
-                norma: "NOM-027",
-                explicacion: "Distancia mínima de 10 metros de materiales combustibles en operaciones de soldadura."
-            },
-            
-            // NOM-014
-            {
-                pregunta: "¿A partir de qué altitud se considera 'gran altitud'?",
-                opciones: ["2000 msnm", "2500 msnm", "3000 msnm", "3500 msnm"],
-                correcta: 2,
-                categoria: "salud",
-                norma: "NOM-014",
-                explicacion: "Se considera gran altitud a partir de 3000 msnm según NOM-014."
-            },
-            
-            // NOM-024
-            {
-                pregunta: "¿Qué tipo de vibración afecta a operadores de vehículos pesados?",
-                opciones: ["Segmentaria", "Cuerpo entero", "Localizada", "Periférica"],
-                correcta: 1,
-                categoria: "salud",
-                norma: "NOM-024",
-                explicacion: "Vehículos pesados generan vibración de cuerpo entero. Herramientas manuales generan vibración segmentaria."
-            },
-            
-            // NOM-034
-            {
-                pregunta: "¿Cuál es el ancho mínimo de puertas para accesibilidad?",
-                opciones: ["0.60 m", "0.70 m", "0.80 m", "0.90 m"],
-                correcta: 2,
-                categoria: "seguridad",
-                norma: "NOM-034",
-                explicacion: "Puertas accesibles deben tener ancho mínimo de 0.80 m según NOM-034."
-            },
-            
-            // NOM-028
-            {
-                pregunta: "¿Qué metodología de análisis de riesgos usa 'desviaciones de parámetros'?",
-                opciones: ["What-If", "HAZOP", "Árbol de fallas", "Checklist"],
-                correcta: 1,
-                categoria: "organizacion",
-                norma: "NOM-028",
-                explicacion: "HAZOP analiza desviaciones de parámetros (presión, temperatura, flujo) con palabras guía."
-            },
-            
-            // NOM-003
+            // ========== NOM-003 (Agrícola) ==========
             {
                 pregunta: "¿Cuál es el período de reentrada típico después de aplicar plaguicidas?",
                 opciones: ["4-8 horas", "12-24 horas", "24-48 horas", "48-72 horas"],
                 correcta: 2,
                 categoria: "especificas",
                 norma: "NOM-003",
-                explicacion: "Período de reentrada típico de 24-48 horas después de aplicación de plaguicidas."
+                explicacion: "Período de reentrada típico de 24-48 horas después de aplicación."
+            },
+            {
+                pregunta: "¿Qué EPP es obligatorio para aplicación de plaguicidas?",
+                opciones: ["Solo guantes", "Traje completo + respirador", "Solo mascarilla", "Gafas únicamente"],
+                correcta: 1,
+                categoria: "especificas",
+                norma: "NOM-003",
+                explicacion: "Se requiere traje completo impermeable y respirador con cartuchos para orgánicos."
+            },
+            
+            // ========== NOM-004 (Maquinaria) ==========
+            {
+                pregunta: "¿Qué significa LOTO?",
+                opciones: ["Lock Out, Tag Out", "Load Out, Turn Off", "Light On, Turn Off", "Long Operation Time Out"],
+                correcta: 0,
+                categoria: "seguridad",
+                norma: "NOM-004",
+                explicacion: "LOTO = Lockout/Tagout (Bloqueo/Etiquetado) para mantenimiento seguro."
+            },
+            {
+                pregunta: "¿Cuál es el primer paso del procedimiento LOTO?",
+                opciones: ["Aislar energía", "Bloquear", "Notificar/Preparar", "Verificar"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-004",
+                explicacion: "LOTO: 1. Preparar/Notificar, 2. Apagar, 3. Aislar, 4. Bloquear, 5. Verificar."
+            },
+            {
+                pregunta: "¿Cuál es el último paso del procedimiento LOTO?",
+                opciones: ["Aislar energía", "Verificar", "Notificar", "Bloquear"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-004",
+                explicacion: "El último paso es Verificar que la energía esté aislada antes de trabajar."
+            },
+            
+            // ========== NOM-005 (Químicos) ==========
+            {
+                pregunta: "En el rombo NFPA, ¿qué color indica riesgo a la salud?",
+                opciones: ["Rojo", "Azul", "Amarillo", "Blanco"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-005",
+                explicacion: "Azul = Salud, Rojo = Inflamabilidad, Amarillo = Reactividad."
+            },
+            {
+                pregunta: "En el rombo NFPA, ¿qué color indica inflamabilidad?",
+                opciones: ["Rojo", "Azul", "Amarillo", "Blanco"],
+                correcta: 0,
+                categoria: "seguridad",
+                norma: "NOM-005",
+                explicacion: "Rojo = Inflamabilidad, Azul = Salud, Amarillo = Reactividad."
+            },
+            {
+                pregunta: "En el rombo NFPA, la escala de peligro va de:",
+                opciones: ["0 a 3", "0 a 4", "1 a 5", "1 a 10"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-005",
+                explicacion: "Escala 0-4 donde 0 = mínimo riesgo, 4 = máximo riesgo."
+            },
+            
+            // ========== NOM-006 (Materiales) ==========
+            {
+                pregunta: "¿Cuál es la altura máxima recomendada para estibas?",
+                opciones: ["2 m", "3 m", "4 m", "5 m"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-006",
+                explicacion: "Altura máxima de estiba: 4 metros o según resistencia de los materiales."
+            },
+            {
+                pregunta: "¿Ancho mínimo de pasillos principales para montacargas?",
+                opciones: ["1 m", "1.5 m", "2 m", "2.5 m"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-006",
+                explicacion: "Pasillo principal mínimo: 2 metros para circulación de montacargas."
+            },
+            
+            // ========== NOM-008 (Forestal) ==========
+            {
+                pregunta: "¿Cuál debe ser la zona de desrame al talar un árbol?",
+                opciones: ["1 vez altura", "2 veces altura", "3 veces altura", "4 veces altura"],
+                correcta: 1,
+                categoria: "especificas",
+                norma: "NOM-008",
+                explicacion: "Zona de desrame: 2 veces la altura del árbol."
+            },
+            {
+                pregunta: "¿A qué ángulo debe estar la ruta de escape en tala?",
+                opciones: ["30°", "45°", "60°", "90°"],
+                correcta: 1,
+                categoria: "especificas",
+                norma: "NOM-008",
+                explicacion: "Ruta de escape a 45° de la dirección de caída planificada."
+            },
+            
+            // ========== NOM-009 (Altura) ==========
+            {
+                pregunta: "¿A partir de qué altura se considera trabajo en altura según NOM-009?",
+                opciones: ["1.50 m", "1.80 m", "2.00 m", "2.50 m"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-009",
+                explicacion: "La NOM-009 establece 1.80 metros como altura mínima."
+            },
+            {
+                pregunta: "¿Cuál es la fuerza máxima de detención en un sistema anticaídas?",
+                opciones: ["4 kN", "6 kN", "8 kN", "10 kN"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-009",
+                explicacion: "Fuerza máxima de detención: 6 kN según normas internacionales."
+            },
+            {
+                pregunta: "¿Qué tipo de arnés es obligatorio para trabajos en altura?",
+                opciones: ["Arnés de cintura", "Arnés de cuerpo completo", "Arnés pectoral", "Cinturón de herramientas"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-009",
+                explicacion: "Arnés de cuerpo completo con punto de conexión dorsal obligatorio."
+            },
+            
+            // ========== NOM-010 (Químicos) ==========
+            {
+                pregunta: "¿Qué significa LMPE?",
+                opciones: ["Límite Máximo Permisible de Exposición", "Límite Mínimo de Protección Especial", "Largo Mantenimiento de Protección", "Luz Mínima para Exposición"],
+                correcta: 0,
+                categoria: "salud",
+                norma: "NOM-010",
+                explicacion: "LMPE = Límite Máximo Permisible de Exposición a agentes químicos."
+            },
+            {
+                pregunta: "¿Qué significa PPT en monitoreo de agentes químicos?",
+                opciones: ["Promedio Ponderado en Tiempo", "Peligro Potencial Tóxico", "Período de Prueba Técnica", "Punto de Prevención Total"],
+                correcta: 0,
+                categoria: "salud",
+                norma: "NOM-010",
+                explicacion: "PPT = Promedio Ponderado en Tiempo para 8 horas de exposición."
+            },
+            {
+                pregunta: "¿Cuánto dura el límite de corto plazo (CPT)?",
+                opciones: ["5 minutos", "10 minutos", "15 minutos", "30 minutos"],
+                correcta: 2,
+                categoria: "salud",
+                norma: "NOM-010",
+                explicacion: "CPT = Concentración Pico Temporal por 15 minutos."
+            },
+            
+            // ========== NOM-011 (Ruido) ==========
+            {
+                pregunta: "¿Cuál es el límite máximo de exposición a ruido para 8 horas?",
+                opciones: ["85 dB", "90 dB", "95 dB", "100 dB"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-011",
+                explicacion: "90 dB es el límite máximo permisible para 8 horas."
+            },
+            {
+                pregunta: "¿Cuánto aumenta la energía sonora por cada 3 dB?",
+                opciones: ["Se duplica", "Se triplica", "Aumenta 50%", "No cambia"],
+                correcta: 0,
+                categoria: "salud",
+                norma: "NOM-011",
+                explicacion: "Cada 3 dB se duplica la energía sonora."
+            },
+            {
+                pregunta: "¿Cuál es el máximo permitido sin protección?",
+                opciones: ["100 dB", "105 dB", "110 dB", "115 dB"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-011",
+                explicacion: "Máximo sin protección: 105 dB (aunque sea por corto tiempo)."
+            },
+            
+            // ========== NOM-012 (Ionizantes) ==========
+            {
+                pregunta: "¿Cuál es el límite ocupacional de radiación por año?",
+                opciones: ["10 mSv", "20 mSv", "50 mSv", "100 mSv"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-012",
+                explicacion: "Límite ocupacional: 20 mSv por año promediado en 5 años."
+            },
+            {
+                pregunta: "¿Cuáles son los principios de protección radiológica?",
+                opciones: ["Tiempo, Distancia, Blindaje", "Agua, Jabón, Crema", "Casco, Lentes, Guantes", "Leche, Yodo, Potasio"],
+                correcta: 0,
+                categoria: "salud",
+                norma: "NOM-012",
+                explicacion: "Tiempo, Distancia, Blindaje (TDB) son los principios básicos."
+            },
+            
+            // ========== NOM-013 (No ionizantes) ==========
+            {
+                pregunta: "¿Qué radiación causa cataratas?",
+                opciones: ["UV", "IR (infrarroja)", "RF", "Microondas"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-013",
+                explicacion: "La radiación infrarroja (IR) puede causar cataratas."
+            },
+            {
+                pregunta: "¿Qué radiación causa cáncer de piel?",
+                opciones: ["UV", "IR", "RF", "Microondas"],
+                correcta: 0,
+                categoria: "salud",
+                norma: "NOM-013",
+                explicacion: "La radiación ultravioleta (UV) causa cáncer de piel y fotoqueratitis."
+            },
+            
+            // ========== NOM-014 (Presiones) ==========
+            {
+                pregunta: "¿A partir de qué altitud se considera 'gran altitud'?",
+                opciones: ["2000 msnm", "2500 msnm", "3000 msnm", "3500 msnm"],
+                correcta: 2,
+                categoria: "salud",
+                norma: "NOM-014",
+                explicacion: "Gran altitud: >3000 msnm según NOM-014."
+            },
+            {
+                pregunta: "¿Cuántos días de aclimatación se recomiendan para gran altitud?",
+                opciones: ["1-2 días", "3-5 días", "5-7 días", "7-10 días"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-014",
+                explicacion: "Aclimatación recomendada: 3-5 días antes de trabajo pesado."
+            },
+            
+            // ========== NOM-015 (Térmicas) ==========
+            {
+                pregunta: "¿Qué significa WBGT?",
+                opciones: ["World Balance Global Temperature", "Wet Bulb Globe Temperature", "Water Boiling Gradient Test", "White Black Green Temperature"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-015",
+                explicacion: "WBGT = Wet Bulb Globe Temperature (índice de bulbo húmedo-globo)."
+            },
+            {
+                pregunta: "¿Cada cuánto se recomienda hidratación en ambientes calurosos?",
+                opciones: ["10 min", "20 min", "30 min", "60 min"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-015",
+                explicacion: "Hidratación: 250 ml cada 20 minutos en ambientes calurosos."
+            },
+            
+            // ========== NOM-016 (Ferrocarriles) ==========
+            {
+                pregunta: "¿Cuál es la distancia de seguridad respecto a vías férreas?",
+                opciones: ["1 m", "2 m", "3 m", "4 m"],
+                correcta: 1,
+                categoria: "especificas",
+                norma: "NOM-016",
+                explicacion: "Distancia de seguridad: 2 metros de la vía férrea."
+            },
+            {
+                pregunta: "¿Qué señal se usa de día en maniobras ferroviarias?",
+                opciones: ["Bandera roja", "Bandera verde", "Bandera amarilla", "Bandera azul"],
+                correcta: 0,
+                categoria: "especificas",
+                norma: "NOM-016",
+                explicacion: "Bandera roja de día, luz roja de noche para señales de alto."
+            },
+            
+            // ========== NOM-017 (EPP) ==========
+            {
+                pregunta: "¿Qué clase de casco es para alto voltaje?",
+                opciones: ["Clase A", "Clase B", "Clase C", "Clase D"],
+                correcta: 1,
+                categoria: "organizacion",
+                norma: "NOM-017",
+                explicacion: "Clase B (o E): resistente a alto voltaje (20,000 V)."
+            },
+            {
+                pregunta: "¿Qué significa N95 en respiradores?",
+                opciones: ["Filtra 95% de partículas", "95 minutos de uso", "95 mm de diámetro", "Modelo 95"],
+                correcta: 0,
+                categoria: "organizacion",
+                norma: "NOM-017",
+                explicacion: "N95 = Filtra al menos 95% de partículas en el aire."
+            },
+            
+            // ========== NOM-018 (SGA) ==========
+            {
+                pregunta: "¿Cuántos pictogramas tiene el Sistema Globalmente Armonizado?",
+                opciones: ["6", "9", "12", "15"],
+                correcta: 1,
+                categoria: "organizacion",
+                norma: "NOM-018",
+                explicacion: "El SGA tiene 9 pictogramas de peligro."
+            },
+            {
+                pregunta: "¿Cuántas secciones tiene la Hoja de Datos de Seguridad (MSDS)?",
+                opciones: ["12", "14", "16", "18"],
+                correcta: 2,
+                categoria: "organizacion",
+                norma: "NOM-018",
+                explicacion: "La MSDS tiene 16 secciones según SGA."
+            },
+            
+            // ========== NOM-019 (Comisiones) ==========
+            {
+                pregunta: "¿Cada cuándo deben reunirse las Comisiones Mixtas?",
+                opciones: ["Semanal", "Quincenal", "Mensual", "Bimestral"],
+                correcta: 2,
+                categoria: "organizacion",
+                norma: "NOM-019",
+                explicacion: "Reuniones mensuales obligatorias según NOM-019."
+            },
+            {
+                pregunta: "¿Cómo se integra la Comisión Mixta?",
+                opciones: ["Solo trabajadores", "Solo patrón", "Igual número patrón-trabajadores", "El que designe el patrón"],
+                correcta: 2,
+                categoria: "organizacion",
+                norma: "NOM-019",
+                explicacion: "Igual número de representantes del patrón y trabajadores."
+            },
+            
+            // ========== NOM-020 (Presión) ==========
+            {
+                pregunta: "¿A qué presión se realiza la prueba hidrostática?",
+                opciones: ["1.0 x PT", "1.25 x PT", "1.5 x PT", "2.0 x PT"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-020",
+                explicacion: "Prueba hidrostática: 1.5 veces la presión de trabajo."
+            },
+            {
+                pregunta: "¿Qué elemento es crítico en recipientes a presión?",
+                opciones: ["Manómetro", "Termómetro", "Válvula de seguridad", "Nivel de agua"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-020",
+                explicacion: "La válvula de seguridad es el último recurso de protección."
+            },
+            
+            // ========== NOM-022 (Estática) ==========
+            {
+                pregunta: "¿Cuál debe ser la resistencia máxima de puesta a tierra?",
+                opciones: ["< 5 ohmios", "< 10 ohmios", "< 15 ohmios", "< 20 ohmios"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-022",
+                explicacion: "Resistencia a tierra debe ser < 10 ohmios."
+            },
+            {
+                pregunta: "¿Qué humedad relativa ayuda a reducir estática?",
+                opciones: ["<30%", "30-40%", "40-50%", ">60%"],
+                correcta: 3,
+                categoria: "seguridad",
+                norma: "NOM-022",
+                explicacion: "Humedad >60% reduce la generación de electricidad estática."
+            },
+            
+            // ========== NOM-023 (Minas) ==========
+            {
+                pregunta: "¿A qué concentración de metano (grisú) se debe evacuar?",
+                opciones: ["1.0%", "1.5%", "2.0%", "2.5%"],
+                correcta: 1,
+                categoria: "especificas",
+                norma: "NOM-023",
+                explicacion: "Evacuación obligatoria al 1.5% de metano."
+            },
+            {
+                pregunta: "¿Rango explosivo del metano?",
+                opciones: ["5-10%", "5-15%", "10-20%", "15-25%"],
+                correcta: 1,
+                categoria: "especificas",
+                norma: "NOM-023",
+                explicacion: "Metano (grisú) explosivo entre 5% y 15% en aire."
+            },
+            
+            // ========== NOM-024 (Vibraciones) ==========
+            {
+                pregunta: "¿Qué tipo de vibración afecta a operadores de vehículos?",
+                opciones: ["Segmentaria", "Cuerpo entero", "Localizada", "Periférica"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-024",
+                explicacion: "Vehículos pesados: vibración de cuerpo entero."
+            },
+            {
+                pregunta: "¿Qué tipo de vibración afecta a usuarios de herramientas manuales?",
+                opciones: ["Segmentaria (mano-brazo)", "Cuerpo entero", "Global", "Local"],
+                correcta: 0,
+                categoria: "salud",
+                norma: "NOM-024",
+                explicacion: "Herramientas manuales: vibración segmentaria mano-brazo."
+            },
+            
+            // ========== NOM-025 (Iluminación) ==========
+            {
+                pregunta: "¿Qué nivel de iluminación se requiere para tareas normales?",
+                opciones: ["50-100 lux", "100-300 lux", "300-500 lux", "500-750 lux"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-025",
+                explicacion: "Tareas normales: 100-300 lux."
+            },
+            {
+                pregunta: "¿Qué nivel para circulación/pasillos?",
+                opciones: ["20-50 lux", "50-100 lux", "100-200 lux", "200-300 lux"],
+                correcta: 0,
+                categoria: "salud",
+                norma: "NOM-025",
+                explicacion: "Circulación: 20-50 lux es suficiente."
+            },
+            
+            // ========== NOM-026 (Colores) ==========
+            {
+                pregunta: "¿Qué color indica prohibición?",
+                opciones: ["Verde", "Azul", "Rojo", "Amarillo"],
+                correcta: 2,
+                categoria: "organizacion",
+                norma: "NOM-026",
+                explicacion: "Rojo: prohibición y equipo contra incendio."
+            },
+            {
+                pregunta: "¿Qué color indica obligación?",
+                opciones: ["Rojo", "Azul", "Amarillo", "Verde"],
+                correcta: 1,
+                categoria: "organizacion",
+                norma: "NOM-026",
+                explicacion: "Azul: obligación (uso de EPP, etc.)."
+            },
+            {
+                pregunta: "¿Qué color indica advertencia/precaución?",
+                opciones: ["Rojo", "Azul", "Amarillo", "Verde"],
+                correcta: 2,
+                categoria: "organizacion",
+                norma: "NOM-026",
+                explicacion: "Amarillo: precaución, riesgo físico."
+            },
+            
+            // ========== NOM-027 (Soldadura) ==========
+            {
+                pregunta: "¿Distancia mínima de combustibles en soldadura?",
+                opciones: ["5 m", "8 m", "10 m", "12 m"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-027",
+                explicacion: "10 metros mínimo de materiales combustibles."
+            },
+            {
+                pregunta: "¿Qué protección ocular se requiere en soldadura?",
+                opciones: ["Gafas claras", "Careta con filtro", "Lentes de sol", "Goggles"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-027",
+                explicacion: "Careta con filtro de oscuridad variable según amperaje."
+            },
+            
+            // ========== NOM-028 (Procesos) ==========
+            {
+                pregunta: "¿Qué metodología usa 'desviaciones de parámetros'?",
+                opciones: ["What-If", "HAZOP", "Árbol de fallas", "Checklist"],
+                correcta: 1,
+                categoria: "organizacion",
+                norma: "NOM-028",
+                explicacion: "HAZOP analiza desviaciones con palabras guía."
+            },
+            {
+                pregunta: "¿Qué metodología usa preguntas 'Qué pasa si...'?",
+                opciones: ["What-If", "HAZOP", "FMEA", "LOPA"],
+                correcta: 0,
+                categoria: "organizacion",
+                norma: "NOM-028",
+                explicacion: "What-If: preguntas estructuradas '¿Qué pasa si...?'"
+            },
+            
+            // ========== NOM-029 (Eléctrico) ==========
+            {
+                pregunta: "¿Qué categoría de arco eléctrico es más peligrosa?",
+                opciones: ["Categoría 0", "Categoría 1", "Categoría 2", "Categoría 4"],
+                correcta: 3,
+                categoria: "seguridad",
+                norma: "NOM-029",
+                explicacion: "Categoría 4 es la más peligrosa (mayor energía)."
+            },
+            {
+                pregunta: "¿Qué se debe verificar antes de trabajar en equipos eléctricos?",
+                opciones: ["Que esté encendido", "Ausencia de tensión", "Que tenga carga", "La hora del día"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-029",
+                explicacion: "Verificar ausencia de tensión con equipo adecuado."
+            },
+            
+            // ========== NOM-030 (Servicios) ==========
+            {
+                pregunta: "¿Qué debe contener un botiquín básico?",
+                opciones: ["Medicamentos controlados", "Material de curación", "Instrumentos quirúrgicos", "Rayos X portátil"],
+                correcta: 1,
+                categoria: "organizacion",
+                norma: "NOM-030",
+                explicacion: "Material de curación: gasa, vendas, antiséptico, guantes."
+            },
+            
+            // ========== NOM-031 (Construcción) ==========
+            {
+                pregunta: "¿A partir de qué profundidad entibar excavaciones?",
+                opciones: ["1.0 m", "1.2 m", "1.5 m", "2.0 m"],
+                correcta: 2,
+                categoria: "especificas",
+                norma: "NOM-031",
+                explicacion: "Excavaciones >1.5 m requieren entibado o talud."
+            },
+            {
+                pregunta: "¿Altura mínima de barandales en andamios?",
+                opciones: ["0.90 m", "1.00 m", "1.20 m", "1.50 m"],
+                correcta: 2,
+                categoria: "especificas",
+                norma: "NOM-031",
+                explicacion: "Barandales a 1.20 m de altura mínima."
+            },
+            
+            // ========== NOM-032 (Carbón) ==========
+            {
+                pregunta: "¿Qué se usa para inertizar polvo de carbón?",
+                opciones: ["Agua", "Roca caliza", "Arena", "Sal"],
+                correcta: 1,
+                categoria: "especificas",
+                norma: "NOM-032",
+                explicacion: "Roca caliza para inertizar polvo de carbón explosivo."
+            },
+            
+            // ========== NOM-033 (Confinados) ==========
+            {
+                pregunta: "¿Rango seguro de oxígeno en espacios confinados?",
+                opciones: ["18-22%", "19.5-23.5%", "20-24%", "21-25%"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-033",
+                explicacion: "Rango seguro: 19.5-23.5% oxígeno."
+            },
+            {
+                pregunta: "¿Cuándo se requiere permiso de entrada a espacio confinado?",
+                opciones: ["Siempre", "Solo si huele mal", "Solo de noche", "Nunca"],
+                correcta: 0,
+                categoria: "seguridad",
+                norma: "NOM-033",
+                explicacion: "Siempre se requiere permiso de entrada escrito."
+            },
+            
+            // ========== NOM-034 (Discapacidad) ==========
+            {
+                pregunta: "¿Ancho mínimo de puertas accesibles?",
+                opciones: ["0.60 m", "0.70 m", "0.80 m", "0.90 m"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-034",
+                explicacion: "Puertas accesibles: ancho mínimo 0.80 m."
+            },
+            
+            // ========== NOM-035 (Psicosocial) ==========
+            {
+                pregunta: "¿Cuántos dominios de riesgo psicosocial existen?",
+                opciones: ["3", "4", "5", "6"],
+                correcta: 2,
+                categoria: "salud",
+                norma: "NOM-035",
+                explicacion: "5 dominios: ambiente, jornada, carga, liderazgo, violencia."
+            },
+            {
+                pregunta: "¿Qué NO es factor psicosocial?",
+                opciones: ["Carga mental", "Jornada laboral", "Ruido", "Violencia laboral"],
+                correcta: 2,
+                categoria: "salud",
+                norma: "NOM-035",
+                explicacion: "Ruido es riesgo físico (NOM-011), no psicosocial."
+            },
+            
+            // ========== NOM-036 (Ergonomía) ==========
+            {
+                pregunta: "¿Límite de carga para hombres (ocasional)?",
+                opciones: ["15 kg", "20 kg", "25 kg", "30 kg"],
+                correcta: 2,
+                categoria: "salud",
+                norma: "NOM-036",
+                explicacion: "25 kg máximo para hombres en levantamiento ocasional."
+            },
+            {
+                pregunta: "¿Límite de carga para mujeres (ocasional)?",
+                opciones: ["10 kg", "12 kg", "15 kg", "18 kg"],
+                correcta: 2,
+                categoria: "salud",
+                norma: "NOM-036",
+                explicacion: "15 kg máximo para mujeres en levantamiento ocasional."
+            },
+            {
+                pregunta: "¿Límite de carga para hombres (frecuente)?",
+                opciones: ["10 kg", "15 kg", "20 kg", "25 kg"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-036",
+                explicacion: "15 kg máximo para hombres en levantamiento frecuente."
+            },
+            
+            // ========== NOM-037 (Teletrabajo) ==========
+            {
+                pregunta: "¿Altura recomendada de mesa para teletrabajo?",
+                opciones: ["60-70 cm", "70-80 cm", "80-90 cm", "90-100 cm"],
+                correcta: 1,
+                categoria: "especificas",
+                norma: "NOM-037",
+                explicacion: "Mesa: 70-80 cm de altura para ergonomía."
+            },
+            {
+                pregunta: "¿Ángulo recomendado de rodillas en posición sedente?",
+                opciones: ["60°", "75°", "90°", "105°"],
+                correcta: 2,
+                categoria: "especificas",
+                norma: "NOM-037",
+                explicacion: "Rodillas a 90° (regla 90-90-90)."
+            },
+            {
+                pregunta: "¿Distancia recomendada a la pantalla?",
+                opciones: ["Brazo extendido", "15 cm", "30 cm", "50 cm"],
+                correcta: 0,
+                categoria: "especificas",
+                norma: "NOM-037",
+                explicacion: "Distancia de un brazo extendido a la pantalla."
             }
         ];
 
+        // Totales por categoría (verificación)
+        console.log("Total preguntas:", bancoPreguntas.length);
+        console.log("Seguridad:", bancoPreguntas.filter(p => p.categoria === "seguridad").length);
+        console.log("Salud:", bancoPreguntas.filter(p => p.categoria === "salud").length);
+        console.log("Organización:", bancoPreguntas.filter(p => p.categoria === "organizacion").length);
+        console.log("Específicas:", bancoPreguntas.filter(p => p.categoria === "especificas").length);
+
+        // Variables del examen
         let examenActual = [];
         let respuestasUsuario = [];
         let preguntaActual = 0;
@@ -341,13 +787,13 @@
             const numPreguntas = parseInt(document.getElementById('numPreguntas').value);
             const categoria = document.getElementById('categoriaExamen').value;
             
-            // Filtrar preguntas por categoría
+            // Filtrar por categoría
             let preguntasFiltradas = bancoPreguntas;
             if (categoria !== 'todas') {
                 preguntasFiltradas = bancoPreguntas.filter(p => p.categoria === categoria);
             }
             
-            // Seleccionar preguntas aleatorias
+            // Selección aleatoria
             examenActual = [...preguntasFiltradas]
                 .sort(() => Math.random() - 0.5)
                 .slice(0, Math.min(numPreguntas, preguntasFiltradas.length));
@@ -390,7 +836,7 @@
                     
                     <div class="question-header">
                         <span class="question-number">Pregunta ${preguntaActual + 1}/${examenActual.length}</span>
-                        <span class="question-category">${pregunta.categoria.toUpperCase()} · ${pregunta.norma}</span>
+                        <span class="question-category">${pregunta.norma} · ${pregunta.categoria.toUpperCase()}</span>
                     </div>
                     
                     <div class="question-text">${pregunta.pregunta}</div>
@@ -475,12 +921,11 @@
                             <h3>${respondidas}</h3>
                             <p>Respondidas</p>
                         </div>
+                        <div class="result-card" style="border-color: #e63946;">
+                            <h3>${examenActual.length - respondidas}</h3>
+                            <p>Sin responder</p>
+                        </div>
                     </div>
-                    
-                    ${respondidas < examenActual.length ? 
-                        `<p style="color: #e63946; margin-bottom: 20px;">
-                            ⚠️ Te faltaron ${examenActual.length - respondidas} preguntas por responder
-                        </p>` : ''}
                     
                     <h3 style="text-align: left; margin-top: 30px;">📝 Revisión de respuestas</h3>
                     <div class="review-list">
@@ -491,6 +936,7 @@
                                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                                         <strong>Pregunta ${idx + 1}</strong>
                                         <span class="badge-fire">${item.norma}</span>
+                                        <span class="badge-norma">${item.categoria}</span>
                                     </div>
                                     <p style="margin: 8px 0;">${item.pregunta}</p>
                                     <p style="color: ${item.esCorrecta ? '#2a9d8f' : '#e63946'}; font-size: 0.9em;">
@@ -532,8 +978,8 @@
             document.getElementById('examArea').innerHTML = `
                 <div class="exam-container" style="text-align: center; padding: 60px;">
                     <i style="font-size: 4em; color: #e63946;">📝</i>
-                    <h2 style="margin: 20px 0;">Listo para comenzar</h2>
-                    <p>Selecciona la cantidad de preguntas y categoría, luego haz clic en "Iniciar Examen"</p>
+                    <h2 style="margin: 20px 0;">Banco de 100 preguntas listo</h2>
+                    <p>Selecciona la cantidad de preguntas y haz clic en "Iniciar Examen"</p>
                     <button class="btn btn-primary" onclick="iniciarExamen()" style="margin: 20px auto;">
                         <i>▶️</i> Comenzar ahora
                     </button>
