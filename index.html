@@ -1,1 +1,870 @@
-<h1>Hola</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚒 STPS Academy - Manual de Estudio para Bomberos</title>
+   
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>
+                🚒 STPS Academy 
+                <span>BOMBEROS</span>
+            </h1>
+            <div class="badge">
+                <i>📚</i> 37 Normas · Manual de Estudio
+            </div>
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <div class="search-box">
+            <i>🔍</i>
+            <input type="text" id="buscador" placeholder="Buscar norma (ej: NOM-035, incendios, altura...)" onkeyup="filtrarNormas()">
+        </div>
+        <button class="filter-btn" onclick="filtrarExamen()">
+            <i>📝</i> Solo normas de examen
+        </button>
+        <button class="filter-btn" onclick="resetFiltro()">
+            <i>🔄</i> Todas las normas
+        </button>
+    </div>
+
+    <div class="categorias-grid" id="categorias-container"></div>
+
+    <!-- Tarjeta de estudio a pantalla completa -->
+    <div class="study-card-overlay" id="studyCard">
+        <div class="study-card">
+            <div class="study-card-header">
+                <h2 id="card-titulo">
+                    <span id="card-codigo">NOM-035</span>
+                    <small id="card-categoria">Salud</small>
+                </h2>
+                <button class="close-btn" onclick="cerrarTarjeta()">✕</button>
+            </div>
+            <div class="study-card-content" id="card-contenido">
+                <!-- Contenido dinámico -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos ENRIQUECIDA para bomberos
+        const normasDB = {
+            "NOM-001": {
+                categoria: "seguridad",
+                titulo: "Edificios e instalaciones",
+                desc: "🔥 CRÍTICO PARA BOMBEROS: Establece las condiciones de seguridad estructural, salidas de emergencia y rutas de evacuación.",
+                peligros: ["Estructuras colapsables", "Salidas bloqueadas", "Señalización inadecuada"],
+                aplica: ["Todo centro de trabajo", "Edificios públicos", "Industrias"],
+                inspeccion: ["Verificar salidas de emergencia", "Medir ancho de pasillos", "Revisar puertas contra fuego"],
+                normativa: ["REGLAMENTO DE CONSTRUCCIONES", "NFPA 101", "RCDF"],
+                examen: {
+                    preguntas: [
+                        "¿Ancho mínimo de pasillos? 90cm",
+                        "¿Puertas de emergencia deben abrir hacia? Hacia fuera",
+                        "¿Altura mínima de pasillos? 2.20m"
+                    ],
+                    tips: "Memorizar medidas: pasillos 90cm, escaleras 1.20m"
+                }
+            },
+            "NOM-002": {
+                categoria: "seguridad",
+                titulo: "Prevención de incendios",
+                desc: "🚒 FUNDAMENTAL: Condiciones para prevención, protección y combate de incendios. Clasificación de fuegos y equipos.",
+                peligros: ["Fuegos clase A, B, C, D, K", "Acumulación de combustibles", "Fallas eléctricas"],
+                aplica: ["Todas las empresas", "Áreas de alto riesgo", "Almacenes"],
+                inspeccion: ["Tipo y ubicación de extintores", "Pruebas hidrostáticas", "Brigadas contra incendio"],
+                normativa: ["NFPA 10", "NFPA 72", "REGLAMENTO DE SEGURIDAD"],
+                examen: {
+                    preguntas: [
+                        "Clase A: materiales sólidos",
+                        "Clase B: líquidos inflamables",
+                        "Clase C: equipos eléctricos",
+                        "Clase D: metales combustibles",
+                        "Clase K: aceites de cocina"
+                    ],
+                    tips: "Recordar: A=Ash, B=Barrel, C=Current, D=Dust, K=Kitchen"
+                }
+            },
+            "NOM-003": {
+                categoria: "especificas",
+                titulo: "Actividades Agrícolas",
+                desc: "🌾 Seguridad en campo: maquinaria agrícola, exposición a plaguicidas y condiciones ambientales extremas.",
+                peligros: ["Plaguicidas", "Maquinaria sin protección", "Golpe de calor"],
+                aplica: ["Campos agrícolas", "Invernaderos", "Empacadoras"],
+                inspeccion: ["Almacén de químicos", "Equipo de aplicación", "Periodos de reentrada"],
+                normativa: ["NOM-003-STPS", "GUÍA FAO", "SANIDAD VEGETAL"],
+                examen: {
+                    preguntas: [
+                        "¿Periodo de reentrada mínimo? 24-48 hrs",
+                        "¿EPP para plaguicidas? Traje completo, respirador",
+                        "¿Lavado de equipos? Área especial"
+                    ],
+                    tips: "24 horas de reentrada es lo más común"
+                }
+            },
+            "NOM-004": {
+                categoria: "seguridad",
+                titulo: "Maquinaria y sistemas",
+                desc: "⚙️ Protección mecánica: resguardos, dispositivos de seguridad y procedimientos LOTO.",
+                peligros: ["Atrapamientos", "Proyecciones", "Contacto eléctrico"],
+                aplica: ["Industria manufacturera", "Talleres", "Plantas de producción"],
+                inspeccion: ["Resguardos fijos/móviles", "Sistemas de enclavamiento", "Procedimientos LOTO"],
+                normativa: ["ISO 12100", "ANSI B11", "NOM-004"],
+                examen: {
+                    preguntas: [
+                        "LOTO significa: Lockout/Tagout",
+                        "¿Pasos LOTO? 1. Preparar 2. Notificar 3. Apagar 4. Aislar 5. Bloquear 6. Verificar",
+                        "¿Distancia de seguridad? Según norma ISO"
+                    ],
+                    tips: "LOTO: Preparar, Notificar, Apagar, Aislar, Bloquear, Verificar (PNAABV)"
+                }
+            },
+            "NOM-005": {
+                categoria: "seguridad",
+                titulo: "Sustancias peligrosas",
+                desc: "☣️ Manejo de químicos: identificación, almacenamiento, incompatibilidades y emergencias.",
+                peligros: ["Explosivos", "Inflamables", "Tóxicos", "Corrosivos", "Reactivos"],
+                aplica: ["Industria química", "Laboratorios", "Almacenes"],
+                inspeccion: ["Etiquetado SGA", "Hojas MSDS", "Diques de contención"],
+                normativa: ["SGA", "NFPA 704", "RCRA"],
+                examen: {
+                    preguntas: [
+                        "Rombo NFPA: Azul=Salud, Rojo=Inflamabilidad, Amarillo=Reactividad, Blanco=Especial",
+                        "Escala 0-4 (4=muy peligroso)",
+                        "Incompatibilidades: ácidos con bases, oxidantes con orgánicos"
+                    ],
+                    tips: "AZUL=Salud, ROJO=Fuego, AMARILLO=Explosión, BLANCO=Especial"
+                }
+            },
+            "NOM-006": {
+                categoria: "seguridad",
+                titulo: "Manejo de materiales",
+                desc: "📦 Almacenamiento y movimiento de cargas: montacargas, estibas y transporte manual.",
+                peligros: ["Caída de cargas", "Vuelco de montacargas", "Sobreesfuerzos"],
+                aplica: ["Almacenes", "Centros de distribución", "Muelles"],
+                inspeccion: ["Altura de estibas", "Pasillos libres", "Certificación de operadores"],
+                normativa: ["OSHA 29 CFR 1910.176", "NOM-006", "ASME B56"],
+                examen: {
+                    preguntas: [
+                        "Altura máxima de estiba: 4m o según resistencia",
+                        "Pasillo principal mínimo: 2m",
+                        "Montacargas: inspección diaria"
+                    ],
+                    tips: "Estibas: más ancho que alto"
+                }
+            },
+            "NOM-007": {
+                categoria: "seguridad",
+                titulo: "Equipos de elevación",
+                desc: "🏗️ Grúas, montacargas y equipos de elevación: operación segura y mantenimiento.",
+                peligros: ["Caída de cargas", "Vuelcos", "Contacto eléctrico"],
+                aplica: ["Construcción", "Industria", "Puertos"],
+                inspeccion: ["Cables y estrobos", "Limites de carga", "Señalización"],
+                normativa: ["ASME B30", "OSHA", "NOM-006"],
+                examen: {
+                    preguntas: [
+                        "Capacidad nominal visible",
+                        "Señales manuales estandarizadas",
+                        "Inspección anual de equipos"
+                    ],
+                    tips: "Nunca pararse bajo carga suspendida"
+                }
+            },
+            "NOM-008": {
+                categoria: "especificas",
+                titulo: "Aprovechamiento Forestal",
+                desc: "🌲 Seguridad en tala y extracción forestal: motosierras, derribo y rescate.",
+                peligros: ["Caída de árboles", "Motosierras", "Aislamiento"],
+                aplica: ["Bosques", "Aserraderos", "Plantaciones"],
+                inspeccion: ["Mantenimiento de motosierras", "Equipo de protección", "Comunicaciones"],
+                normativa: ["NOM-008-STPS", "NFPA 1144", "OSHA Logging"],
+                examen: {
+                    preguntas: [
+                        "Dirección de caída planificada",
+                        "Zona de desrame: 2 veces altura del árbol",
+                        "Equipo: casco, careta, motosierra con freno"
+                    ],
+                    tips: "Siempre tener ruta de escape a 45°"
+                }
+            },
+            "NOM-009": {
+                categoria: "seguridad",
+                titulo: "Trabajos en altura",
+                desc: "🧗 CRÍTICO: Prevención de caídas en trabajos sobre 1.80m. Sistemas anticaídas y puntos de anclaje.",
+                peligros: ["Caídas a distinto nivel", "Fallo de anclajes", "Síndrome del arnés"],
+                aplica: ["Construcción", "Mantenimiento", "Techos"],
+                inspeccion: ["Arnés de cuerpo completo", "Líneas de vida", "Conectores"],
+                normativa: ["ANSI Z359", "OSHA 1926.500", "NOM-009"],
+                examen: {
+                    preguntas: [
+                        "Altura mínima: 1.80m",
+                        "Inspección pre-uso: 100% de equipos",
+                        "Fuerza de detención máxima: 6kN",
+                        "Factor de caída: <=2"
+                    ],
+                    tips: "Arnés: siempre conectado, nunca desconectar en altura"
+                }
+            },
+            "NOM-010": {
+                categoria: "salud",
+                titulo: "Agentes químicos",
+                desc: "☢️ Exposición a químicos: LMPE, monitoreo ambiental y vigilancia médica.",
+                peligros: ["Intoxicación aguda", "Enfermedades crónicas", "Sensibilización"],
+                aplica: ["Industria química", "Pinturas", "Laboratorios"],
+                inspeccion: ["Mediciones ambientales", "Registros de exposición", "Vigilancia médica"],
+                normativa: ["ACGIH", "NIOSH", "NOM-010"],
+                examen: {
+                    preguntas: [
+                        "LMPE: Límite Máximo Permisible de Exposición",
+                        "PPT: Promedio Ponderado en Tiempo (8 hrs)",
+                        "CPT: Concentración Pico Temporal (15 min)",
+                        "Límite de corto plazo: 15 min"
+                    ],
+                    tips: "8 horas = PPT, 15 min = CPT"
+                }
+            },
+            "NOM-011": {
+                categoria: "salud",
+                titulo: "Ruido",
+                desc: "🔊 Exposición a ruido: límites permisibles, protección auditiva y audiometrías.",
+                peligros: ["Hipoacusia", "Tinnitus", "Estrés"],
+                aplica: ["Industria pesada", "Construcción", "Música"],
+                inspeccion: ["Dosimetrías", "Audiometrías", "Atenuación de protectores"],
+                normativa: ["OSHA 1910.95", "NIOSH", "NOM-011"],
+                examen: {
+                    preguntas: [
+                        "Límite: 90 dB por 8 horas",
+                        "Dosis: 100% a 90 dB/8h",
+                        "Dobla la energía cada 3 dB",
+                        "Máximo sin protección: 105 dB"
+                    ],
+                    tips: "3 dB = doble energía, 5 dB = factor de intercambio OSHA"
+                }
+            },
+            "NOM-012": {
+                categoria: "salud",
+                titulo: "Radiaciones ionizantes",
+                desc: "☢️ Rayos X, gamma, partículas: protección radiológica y dosimetría.",
+                peligros: ["Cáncer", "Quemaduras", "Esterilidad"],
+                aplica: ["Hospitales", "Industria nuclear", "Gammagrafía"],
+                inspeccion: ["Dosímetros personales", "Blindaje", "Señalización"],
+                normativa: ["IAEA", "NCRP", "NOM-012"],
+                examen: {
+                    preguntas: [
+                        "Límite público: 1 mSv/año",
+                        "Límite ocupacional: 20 mSv/año",
+                        "Principios: Tiempo, Distancia, Blindaje",
+                        "Dosímetro obligatorio"
+                    ],
+                    tips: "TDB: Tiempo, Distancia, Blindaje"
+                }
+            },
+            "NOM-013": {
+                categoria: "salud",
+                titulo: "Radiaciones no ionizantes",
+                desc: "🔦 UV, IR, microondas, RF: efectos biológicos y protección.",
+                peligros: ["Quemaduras", "Cataratas", "Esterilidad temporal"],
+                aplica: ["Soldadura", "Telecomunicaciones", "Hospitales"],
+                inspeccion: ["Mediciones de campo", "Protección ocular", "Blindaje"],
+                normativa: ["ICNIRP", "IEEE", "NOM-013"],
+                examen: {
+                    preguntas: [
+                        "UV: fotokeratitis, cáncer piel",
+                        "IR: cataratas, quemaduras",
+                        "RF: calentamiento de tejidos",
+                        "Límites ICNIRP"
+                    ],
+                    tips: "UV = ojos y piel, IR = ojos, RF = cuerpo entero"
+                }
+            },
+            "NOM-014": {
+                categoria: "salud",
+                titulo: "Presiones ambientales",
+                desc: "⛰️ Trabajos en alta montaña, buceo, túneles hiperbáricos.",
+                peligros: ["Mal de montaña", "Enfermedad descompresiva", "Barotrauma"],
+                aplica: ["Minas profundas", "Buceo comercial", "Aviación"],
+                inspeccion: ["Aclimatación", "Tablas de descompresión", "Equipo especializado"],
+                normativa: ["US Navy Diving Manual", "NOM-014", "ADI"],
+                examen: {
+                    preguntas: [
+                        "Gran altitud: >3000 msnm",
+                        "Aclimatación: 3-5 días",
+                        "Buceo: tablas, computadora",
+                        "Paradas de descompresión obligatorias"
+                    ],
+                    tips: "Subir lento, bajar rápido (buceo)"
+                }
+            },
+            "NOM-015": {
+                categoria: "salud",
+                titulo: "Condiciones térmicas",
+                desc: "🌡️ Estrés por calor y frío: WBGT, índices de enfriamiento, hidratación.",
+                peligros: ["Golpe de calor", "Hipotermia", "Deshidratación"],
+                aplica: ["Fundiciones", "Cámaras frías", "Exteriores"],
+                inspeccion: ["Mediciones WBGT", "Regímenes descanso", "Hidratación"],
+                normativa: ["ACGIH TLV", "ISO 7243", "NOM-015"],
+                examen: {
+                    preguntas: [
+                        "WBGT: índice de bulbo húmedo-globo",
+                        "Calor: descansos por hora según WBGT",
+                        "Frío: sensación térmica, viento",
+                        "Hidratación: 250ml cada 20 min"
+                    ],
+                    tips: "Trabajo pesado >30°C WBGT requiere descansos"
+                }
+            },
+            "NOM-016": {
+                categoria: "especificas",
+                titulo: "Ferrocarriles",
+                desc: "🚂 Seguridad en vías férreas: operación de trenes, maniobras y cruces.",
+                peligros: ["Atropellamiento", "Descarrilamiento", "Golpes"],
+                aplica: ["Ferrocarriles", "Patios de maniobras", "Cruces"],
+                inspeccion: ["Señalización", "Estado de vías", "Comunicaciones"],
+                normativa: ["AREMA", "FRA", "NOM-016"],
+                examen: {
+                    preguntas: [
+                        "Distancia de seguridad: 2m de la vía",
+                        "Señales: bandera roja de día, luz roja noche",
+                        "Comunicación por radio obligatoria"
+                    ],
+                    tips: "Nunca cruzar entre vagones parados"
+                }
+            },
+            "NOM-017": {
+                categoria: "organizacion",
+                titulo: "Equipo de Protección Personal",
+                desc: "🛡️ EPP: selección, uso, mantenimiento y reposición según riesgo.",
+                peligros: ["EPP inadecuado", "Mal ajuste", "Vida útil vencida"],
+                aplica: ["TODAS las empresas", "TODOS los trabajadores"],
+                inspeccion: ["Certificación NOM", "Vida útil", "Ajuste"],
+                normativa: ["ANSI/ISEA", "NFPA", "NOM-017"],
+                examen: {
+                    preguntas: [
+                        "Casco: clase A,B,C,G,E",
+                        "Lentes: impacto, químico, radiación",
+                        "Respiradores: N95, N100, P100",
+                        "Guantes: corte, químico, calor",
+                        "Botas: punta de acero, dielectricas"
+                    ],
+                    tips: "EPP siempre último recurso, antes controles ingeniería"
+                }
+            },
+            "NOM-018": {
+                categoria: "organizacion",
+                titulo: "Peligros y Riesgos Químicos",
+                desc: "🏷️ Sistema Globalmente Armonizado (SGA): etiquetas y hojas MSDS.",
+                peligros: ["Mal etiquetado", "MSDS incompletas", "Desconocimiento"],
+                aplica: ["Industria química", "Laboratorios", "Almacenes"],
+                inspeccion: ["Etiquetas SGA", "MSDS accesibles", "Capacitación"],
+                normativa: ["SGA (GHS)", "NFPA 704", "NOM-018"],
+                examen: {
+                    preguntas: [
+                        "9 pictogramas SGA",
+                        "Palabras de advertencia: Peligro, Atención",
+                        "H: indicaciones de peligro",
+                        "P: consejos de prudencia",
+                        "MSDS: 16 secciones"
+                    ],
+                    tips: "Memorizar 9 pictogramas: explosivo, inflamable, comburente, etc."
+                }
+            },
+            "NOM-019": {
+                categoria: "organizacion",
+                titulo: "Comisiones de Seguridad",
+                desc: "👥 Comisiones Mixtas: integración, funciones y reuniones mensuales.",
+                peligros: ["Falta de participación", "Actas incompletas", "Incumplimiento"],
+                aplica: ["TODAS las empresas >15 trabajadores"],
+                inspeccion: ["Acta constitutiva", "Reuniones mensuales", "Recorridos"],
+                normativa: ["LFT", "REGLAMENTO STPS", "NOM-019"],
+                examen: {
+                    preguntas: [
+                        "Integración: igual número patrón-trabajadores",
+                        "Reuniones: mensuales",
+                        "Funciones: investigación incidentes, promoción",
+                        "Recorridos: periódicos"
+                    ],
+                    tips: "50-50 patrón-trabajadores, reunión cada mes"
+                }
+            },
+            "NOM-020": {
+                categoria: "seguridad",
+                titulo: "Recipientes a presión",
+                desc: "🔥 Calderas, recipientes sujetos a presión: operación y mantenimiento.",
+                peligros: ["Explosión", "Quemaduras", "Fugas"],
+                aplica: ["Calderas", "Compresores", "Autoclaves"],
+                inspeccion: ["Válvulas de seguridad", "Pruebas hidrostáticas", "Manómetros"],
+                normativa: ["ASME BPVC", "NBBI", "NOM-020"],
+                examen: {
+                    preguntas: [
+                        "Prueba hidrostática: 1.5 veces presión trabajo",
+                        "Válvula seguridad: calibrada, libre",
+                        "Manómetro: visible, iluminado",
+                        "Registro diario: presión, temperatura"
+                    ],
+                    tips: "Válvula seguridad = último recurso"
+                }
+            },
+            "NOM-022": {
+                categoria: "seguridad",
+                titulo: "Electricidad estática",
+                desc: "⚡ Prevención de descargas electrostáticas en ambientes explosivos.",
+                peligros: ["Incendio", "Explosión", "Shock"],
+                aplica: ["Industria química", "Pintura", "Polvos combustibles"],
+                inspeccion: ["Puesta a tierra", "Ionizadores", "Humidificación"],
+                normativa: ["NFPA 77", "IEC 60079", "NOM-022"],
+                examen: {
+                    preguntas: [
+                        "Resistencia a tierra: <10 ohmios",
+                        "Humidificación: >60% reduce estática",
+                        "Calzado antiestático: <100 Mohm",
+                        "Pisos conductores: <1 Mohm"
+                    ],
+                    tips: "Tierra <10 ohmios, piso <1 Mohm"
+                }
+            },
+            "NOM-023": {
+                categoria: "especificas",
+                titulo: "Minas Subterráneas",
+                desc: "⛏️ Seguridad minera: ventilación, gases, explosivos, estabilidad.",
+                peligros: ["Grisú", "Polvo explosivo", "Derrumbe", "Incendio"],
+                aplica: ["Minas subterráneas", "Túneles"],
+                inspeccion: ["Ventilación", "Monitoreo gases", "Sostenimiento"],
+                normativa: ["MSHA", "NOM-023", "REGLAMENTO MINERO"],
+                examen: {
+                    preguntas: [
+                        "Grisú: metano 5-15% explosivo",
+                        "Ventilación: >6 m3/min por persona",
+                        "Refugios: cada 500m",
+                        "Equipo a prueba de explosión"
+                    ],
+                    tips: "Grisú = metano, 5-15% explota"
+                }
+            },
+            "NOM-024": {
+                categoria: "salud",
+                titulo: "Vibraciones",
+                desc: "📳 Vibraciones cuerpo entero y segmentarias: efectos y control.",
+                peligros: ["Lumbalgia", "Síndrome vibración mano-brazo", "Fatiga"],
+                aplica: ["Operadores maquinaria", "Minería", "Construcción"],
+                inspeccion: ["Mediciones vibratorias", "Asientos amortiguados", "Herramientas baja vibración"],
+                normativa: ["ISO 2631", "ISO 5349", "NOM-024"],
+                examen: {
+                    preguntas: [
+                        "Cuerpo entero: vehículos, <0.5 m/s2",
+                        "Mano-brazo: herramientas, <2.5 m/s2",
+                        "Límite 8 horas",
+                        "Guantes antivibración"
+                    ],
+                    tips: "CE=vehículos, MB=herramientas"
+                }
+            },
+            "NOM-025": {
+                categoria: "salud",
+                titulo: "Iluminación",
+                desc: "💡 Niveles mínimos de iluminación según tarea visual.",
+                peligros: ["Fatiga visual", "Errores", "Accidentes"],
+                aplica: ["TODOS los centros de trabajo"],
+                inspeccion: ["Luxómetro", "Uniformidad", "Deslumbramiento"],
+                normativa: ["IESNA", "ISO 8995", "NOM-025"],
+                examen: {
+                    preguntas: [
+                        "Circulación: 20-50 lux",
+                        "Tareas normales: 100-300 lux",
+                        "Tareas finas: 500-750 lux",
+                        "Tareas muy finas: 1000+ lux"
+                    ],
+                    tips: "50=pasillos, 300=oficina, 750=taller fino"
+                }
+            },
+            "NOM-026": {
+                categoria: "organizacion",
+                titulo: "Colores y Señales",
+                desc: "🟥 Colores de seguridad y señalización en centros de trabajo.",
+                peligros: ["Señalización ausente", "Confusión", "No visible"],
+                aplica: ["TODOS los centros de trabajo"],
+                inspeccion: ["Señales adecuadas", "Ubicación visible", "Mantenimiento"],
+                normativa: ["ISO 3864", "ANSI Z535", "NOM-026"],
+                examen: {
+                    preguntas: [
+                        "ROJO: prohibición, equipo incendio",
+                        "AMARILLO: precaución, riesgo",
+                        "VERDE: seguridad, emergencia",
+                        "AZUL: obligación",
+                        "FORMA: círculo=prohibición, triángulo=advertencia, cuadrado=información"
+                    ],
+                    tips: "Rojo=alto, Amarillo=cuidado, Verde=seguro, Azul=obligación"
+                }
+            },
+            "NOM-027": {
+                categoria: "seguridad",
+                titulo: "Soldadura y corte",
+                desc: "🔥 Seguridad en procesos de soldadura: equipos, ventilación, EPP.",
+                peligros: ["Humos metálicos", "Radiación UV", "Incendio", "Quemaduras"],
+                aplica: ["Talleres", "Construcción", "Industria"],
+                inspeccion: ["Ventilación", "Careta filtro adecuado", "Ropa ignífuga"],
+                normativa: ["AWS", "NFPA 51B", "NOM-027"],
+                examen: {
+                    preguntas: [
+                        "Filtro: número según amperaje",
+                        "Ventilación: extracción localizada",
+                        "Distancia mínima combustibles: 10m",
+                        "Vigía contra incendio"
+                    ],
+                    tips: "Número de filtro = amperaje/10 aproximadamente"
+                }
+            },
+            "NOM-028": {
+                categoria: "organizacion",
+                titulo: "Seguridad en Procesos",
+                desc: "🏭 Administración de seguridad de procesos con químicos peligrosos.",
+                peligros: ["Fuga masiva", "Explosión", "Incendio"],
+                aplica: ["Industria química", "Refinerías", "Petroquímica"],
+                inspeccion: ["Análisis de riesgos", "Procedimientos operación", "Gestión cambio"],
+                normativa: ["OSHA PSM", "EPA RMP", "NOM-028"],
+                examen: {
+                    preguntas: [
+                        "HAZOP: metodología análisis riesgo",
+                        "What-If: preguntas estructuradas",
+                        "Árbol de fallas: diagrama lógico",
+                        "Gestión de cambio: autorización previa"
+                    ],
+                    tips: "HAZOP = desviaciones, What-If = escenarios"
+                }
+            },
+            "NOM-029": {
+                categoria: "seguridad",
+                titulo: "Mantenimiento eléctrico",
+                desc: "⚡ Seguridad en trabajos eléctricos: LOTO, herramientas aisladas, EPP.",
+                peligros: ["Electrocución", "Arco eléctrico", "Quemaduras"],
+                aplica: ["Mantenimiento", "Instalaciones eléctricas", "Subestaciones"],
+                inspeccion: ["LOTO", "Herramientas aisladas", "Ropa arc flash"],
+                normativa: ["NFPA 70E", "IEEE", "NOM-029"],
+                examen: {
+                    preguntas: [
+                        "Categoría arco eléctrico: 0-4",
+                        "Límite de aproximación: restringido, prohibido",
+                        "Verificación ausencia tensión",
+                        "EPP según categoría"
+                    ],
+                    tips: "Siempre verificar ausencia de tensión ANTES de tocar"
+                }
+            },
+            "NOM-030": {
+                categoria: "organizacion",
+                titulo: "Servicios Preventivos",
+                desc: "🏥 Servicios de seguridad y salud: personal, botiquín, primeros auxilios.",
+                peligros: ["Atención médica tardía", "Botiquín incompleto", "Personal no capacitado"],
+                aplica: ["TODOS los centros de trabajo"],
+                inspeccion: ["Personal médico", "Botiquín reglamentario", "Capacitación primeros auxilios"],
+                normativa: ["NOM-030", "GUÍA STPS", "LFT"],
+                examen: {
+                    preguntas: [
+                        "Botiquín: material curación básico",
+                        "Personal según número trabajadores",
+                        "Primeros auxilios: personal capacitado",
+                        "Tiempo respuesta: inmediato"
+                    ],
+                    tips: "Botiquín mínimo: gasa, vendas, antiséptico, guantes"
+                }
+            },
+            "NOM-031": {
+                categoria: "especificas",
+                titulo: "Construcción",
+                desc: "🏗️ Seguridad en obras: andamios, excavaciones, herramientas eléctricas.",
+                peligros: ["Caídas", "Derrumbes", "Electrocución", "Golpes"],
+                aplica: ["Obras construcción", "Edificaciones", "Infraestructura"],
+                inspeccion: ["Andamios", "Excavaciones", "Equipos"],
+                normativa: ["OSHA 1926", "NOM-031", "REGLAMENTO CONSTRUCCIÓN"],
+                examen: {
+                    preguntas: [
+                        "Andamios: barandal 1.2m, rodapié",
+                        "Excavaciones: entibado si >1.5m",
+                        "Talud: según tipo suelo",
+                        "Herramientas: doble aislamiento"
+                    ],
+                    tips: "Excavación >1.5m = entibar o talud"
+                }
+            },
+            "NOM-032": {
+                categoria: "especificas",
+                titulo: "Minas de Carbón",
+                desc: "🪨 Seguridad específica en minas de carbón: grisú, polvo, explosiones.",
+                peligros: ["Explosión grisú", "Explosión polvo", "Incendio"],
+                aplica: ["Minas carbón", "Plantas beneficio"],
+                inspeccion: ["Monitoreo metano", "Roca caliza", "Ventilación"],
+                normativa: ["MSHA", "NOM-032", "REGLAMENTO MINERO"],
+                examen: {
+                    preguntas: [
+                        "Grisú: metano 1% alarma, 1.5% evacuar",
+                        "Polvo: roca caliza inertización",
+                        "Ventilación: dilución metano",
+                        "Equipo: certificado MSHA"
+                    ],
+                    tips: "Metano >1% = alerta, >1.5% = evacuar"
+                }
+            },
+            "NOM-033": {
+                categoria: "seguridad",
+                titulo: "Espacios confinados",
+                desc: "🚪 Acceso a tanques, ductos, cisternas: atmósfera peligrosa, rescate.",
+                peligros: ["Atmósfera tóxica", "Deficiencia oxígeno", "Explosión", "Atrapamiento"],
+                aplica: ["Industria", "Drenaje", "Tanques"],
+                inspeccion: ["Permiso entrada", "Monitoreo continuo", "Ventilación"],
+                normativa: ["OSHA 1910.146", "NFPA 350", "NOM-033"],
+                examen: {
+                    preguntas: [
+                        "Oxígeno: 19.5-23.5%",
+                        "LEL: <10% inflamable",
+                        "Tóxico: según sustancia",
+                        "Ventilación: 20 cambios/hora"
+                    ],
+                    tips: "O2 <19.5% = deficiente, <16% = muerte inmediata"
+                }
+            },
+            "NOM-034": {
+                categoria: "seguridad",
+                titulo: "Discapacidad",
+                desc: "♿ Seguridad para trabajadores con discapacidad: accesibilidad, señalización.",
+                peligros: ["Barreras arquitectónicas", "Evacuación imposible", "Señalización inadecuada"],
+                aplica: ["TODOS los centros de trabajo"],
+                inspeccion: ["Rutas accesibles", "Señalización adaptada", "Procedimientos inclusivos"],
+                normativa: ["ADA", "NOM-034", "REGLAMENTO ACCESIBILIDAD"],
+                examen: {
+                    preguntas: [
+                        "Rutas: ancho mínimo 0.90m",
+                        "Puertas: ancho 0.80m",
+                        "Señalización: Braille, sonora",
+                        "Evacuación: sillas, refugios"
+                    ],
+                    tips: "Accesibilidad = ancho puertas 0.80m, rampas 8%"
+                }
+            },
+            "NOM-035": {
+                categoria: "salud",
+                titulo: "Riesgo psicosocial",
+                desc: "🧠 Estrés, violencia, jornada: identificación y prevención.",
+                peligros: ["Burnout", "Violencia laboral", "Ansiedad", "Depresión"],
+                aplica: ["TODOS los centros de trabajo"],
+                inspeccion: ["Cuestionarios", "Identificación factores", "Programas intervención"],
+                normativa: ["NOM-035", "GUÍA STPS", "LFT"],
+                examen: {
+                    preguntas: [
+                        "5 dominios: ambiente, jornada, carga, liderazgo, violencia",
+                        "Cuestionarios: identificación",
+                        "Medidas: preventivas, correctivas",
+                        "Seguimiento: periódico"
+                    ],
+                    tips: "Factores: ambiente, jornada, carga, liderazgo, violencia"
+                }
+            },
+            "NOM-036": {
+                categoria: "salud",
+                titulo: "Riesgo ergonómico",
+                desc: "💪 Manejo manual de cargas: límites, técnicas, ayudas mecánicas.",
+                peligros: ["Lesiones lumbares", "Hernias", "Fatiga muscular"],
+                aplica: ["Almacenes", "Mudanzas", "Industria"],
+                inspeccion: ["Peso cargas", "Técnicas levantamiento", "Ayudas mecánicas"],
+                normativa: ["NIOSH", "ISO 11228", "NOM-036"],
+                examen: {
+                    preguntas: [
+                        "Límite hombres: 25 kg ocasional, 15 kg frecuente",
+                        "Límite mujeres: 15 kg ocasional, 10 kg frecuente",
+                        "Ecuación NIOSH: calcula peso recomendado",
+                        "Ayudas: diablos, montacargas, mesas elevadoras"
+                    ],
+                    tips: "25/15 hombres, 15/10 mujeres (ocasional/frecuente)"
+                }
+            },
+            "NOM-037": {
+                categoria: "especificas",
+                titulo: "Teletrabajo",
+                desc: "🏠 Trabajo remoto: condiciones ergonómicas, jornada, desconexión.",
+                peligros: ["Trastornos musculoesqueléticos", "Fatiga visual", "Aislamiento"],
+                aplica: ["Teletrabajadores", "Home office"],
+                inspeccion: ["Espacio trabajo", "Equipo ergonómico", "Jornada"],
+                normativa: ["NOM-037", "LFT", "GUÍA STPS"],
+                examen: {
+                    preguntas: [
+                        "Silla: ajustable, soporte lumbar",
+                        "Mesa: 70-80cm altura",
+                        "Pantalla: distancia brazo",
+                        "Desconexión: fuera jornada",
+                        "Pausas: activas"
+                    ],
+                    tips: "Ergonomía: 90-90-90 (codo, cadera, rodilla 90°)"
+                }
+            }
+        };
+
+        const categorias = [
+            { id: "seguridad", nombre: "SEGURIDAD", icono: "🔧", color: "#e63946" },
+            { id: "salud", nombre: "SALUD EN EL TRABAJO", icono: "❤️", color: "#2a9d8f" },
+            { id: "organizacion", nombre: "ORGANIZACIÓN", icono: "📋", color: "#e9c46a" },
+            { id: "especificas", nombre: "ACTIVIDADES ESPECÍFICAS", icono: "🏭", color: "#457b9d" }
+        ];
+
+        let filtroActual = "todas";
+        let busquedaActual = "";
+
+        function renderizarCategorias() {
+            const container = document.getElementById('categorias-container');
+            container.innerHTML = '';
+
+            categorias.forEach(cat => {
+                let normasCategoria = Object.entries(normasDB)
+                    .filter(([_, norma]) => norma.categoria === cat.id);
+
+                // Aplicar filtros
+                if (filtroActual === "examen") {
+                    normasCategoria = normasCategoria.filter(([_, norma]) => norma.examen);
+                }
+
+                if (busquedaActual) {
+                    const busqueda = busquedaActual.toLowerCase();
+                    normasCategoria = normasCategoria.filter(([codigo, norma]) => 
+                        codigo.toLowerCase().includes(busqueda) ||
+                        norma.titulo.toLowerCase().includes(busqueda) ||
+                        norma.desc.toLowerCase().includes(busqueda)
+                    );
+                }
+
+                if (normasCategoria.length === 0) return;
+
+                const categoriaDiv = document.createElement('div');
+                categoriaDiv.className = `categoria ${cat.id}`;
+                
+                categoriaDiv.innerHTML = `
+                    <div class="categoria-header" style="background: ${cat.color}">
+                        <span class="categoria-icon">${cat.icono}</span>
+                        <h2>${cat.nombre}</h2>
+                        <span style="margin-left: auto; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 30px;">${normasCategoria.length}</span>
+                    </div>
+                    <div class="normas-grid">
+                        ${normasCategoria.map(([codigo, norma]) => `
+                            <div class="norma-card ${norma.examen ? 'importante' : ''}" onclick="abrirTarjeta('${codigo}')">
+                                <div class="norma-code">${codigo}</div>
+                                <div class="norma-title">${norma.titulo.split(' ').slice(0,2).join(' ')}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                container.appendChild(categoriaDiv);
+            });
+        }
+
+        window.abrirTarjeta = function(codigo) {
+            const norma = normasDB[codigo];
+            if (!norma) return;
+
+            const contenido = document.getElementById('card-contenido');
+            
+            contenido.innerHTML = `
+                <div class="card-section" style="border-left-color: #e63946">
+                    <div class="section-title">
+                        <i>🔥</i> DESCRIPCIÓN CRÍTICA
+                    </div>
+                    <p style="font-size: 1.2em; line-height: 1.6">${norma.desc}</p>
+                </div>
+
+                <div class="card-section" style="border-left-color: #f4a261">
+                    <div class="section-title">
+                        <i>⚠️</i> PELIGROS PRINCIPALES
+                    </div>
+                    <div>
+                        ${norma.peligros.map(p => `<span class="peligro-tag">🔥 ${p}</span>`).join(' ')}
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="card-section" style="border-left-color: #2a9d8f">
+                        <div class="section-title">
+                            <i>🏭</i> APLICA EN
+                        </div>
+                        <ul class="normativa-list">
+                            ${norma.aplica.map(a => `<li>${a}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="card-section" style="border-left-color: #457b9d">
+                        <div class="section-title">
+                            <i>🔍</i> INSPECCIÓN CLAVE
+                        </div>
+                        <ul class="normativa-list">
+                            ${norma.inspeccion.map(i => `<li>${i}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card-section" style="border-left-color: #9c89b8">
+                    <div class="section-title">
+                        <i>📚</i> NORMATIVA APLICABLE
+                    </div>
+                    <div>
+                        ${norma.normativa.map(n => `<span class="peligro-tag" style="background: #e0e7ff; color: #1e40af">📘 ${n}</span>`).join(' ')}
+                    </div>
+                </div>
+
+                ${norma.examen ? `
+                <div class="examen-tips">
+                    <h4><i>📝 PREGUNTAS FRECUENTES DE EXAMEN</i></h4>
+                    <ul class="normativa-list">
+                        ${norma.examen.preguntas.map(p => `<li>${p}</li>`).join('')}
+                    </ul>
+                    <p style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ffeaa7">
+                        <strong>💡 TIP DE ESTUDIO:</strong> ${norma.examen.tips}
+                    </p>
+                </div>
+                ` : ''}
+
+                <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.9em;">
+                    <i>⏱️ Última actualización: 2024 · STPS Academy para Bomberos</i>
+                </div>
+            `;
+
+            document.getElementById('card-codigo').textContent = codigo;
+            document.getElementById('card-titulo').innerHTML = `
+                <span id="card-codigo">${codigo}</span>
+                <small id="card-categoria" style="background: ${categorias.find(c => c.id === norma.categoria).color}">${norma.categoria.toUpperCase()}</small>
+            `;
+
+            document.getElementById('studyCard').style.display = 'flex';
+        };
+
+        window.cerrarTarjeta = function() {
+            document.getElementById('studyCard').style.display = 'none';
+        };
+
+        window.filtrarNormas = function() {
+            busquedaActual = document.getElementById('buscador').value;
+            renderizarCategorias();
+        };
+
+        window.filtrarExamen = function() {
+            filtroActual = "examen";
+            document.getElementById('buscador').value = '';
+            busquedaActual = '';
+            renderizarCategorias();
+        };
+
+        window.resetFiltro = function() {
+            filtroActual = "todas";
+            document.getElementById('buscador').value = '';
+            busquedaActual = '';
+            renderizarCategorias();
+        };
+
+        // Cerrar con Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') cerrarTarjeta();
+        });
+
+        // Inicializar
+        renderizarCategorias();
+    </script>
+</body>
+</html>
