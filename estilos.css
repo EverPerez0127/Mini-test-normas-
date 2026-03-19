@@ -1,0 +1,418 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: #1a1e2b;
+            min-height: 100vh;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Header estilo academia de bomberos */
+        .header {
+            background: linear-gradient(135deg, #0b1622 0%, #1e2a3a 100%);
+            color: white;
+            padding: 25px 30px;
+            border-bottom: 5px solid #e63946;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header h1 span {
+            background: #e63946;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.5em;
+            letter-spacing: 2px;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            border: 1px solid #e63946;
+        }
+
+        .badge i {
+            color: #e63946;
+            margin-right: 8px;
+        }
+
+        /* Panel de control */
+        .control-panel {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            background: white;
+            border-radius: 50px;
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1em;
+            background: transparent;
+        }
+
+        .filter-btn {
+            background: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .filter-btn:hover {
+            background: #e63946;
+            color: white;
+        }
+
+        .filter-btn.active {
+            background: #e63946;
+            color: white;
+        }
+
+        /* Grid de categorías */
+        .categorias-grid {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .categoria {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .categoria:hover {
+            transform: translateY(-5px);
+        }
+
+        .categoria-header {
+            padding: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .categoria-header h2 {
+            font-size: 1.4em;
+        }
+
+        .categoria-icon {
+            font-size: 2.5em;
+        }
+
+        /* Grid de normas */
+        .normas-grid {
+            padding: 20px;
+            background: #f8fafc;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 8px;
+        }
+
+        .norma-card {
+            background: white;
+            border-radius: 10px;
+            padding: 12px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            font-size: 0.85em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .norma-card:hover {
+            border-color: #e63946;
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.2);
+        }
+
+        .norma-card.examen {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+
+        .norma-code {
+            font-weight: 800;
+            color: #1e2a3a;
+        }
+
+        .norma-title {
+            font-size: 0.7em;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        /* Tarjeta de estudio a pantalla completa */
+        .study-card-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .study-card {
+            background: white;
+            width: 100%;
+            max-width: 1100px;
+            max-height: 90vh;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(230, 57, 70, 0.3);
+            animation: cardAppear 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .study-card-header {
+            background: linear-gradient(135deg, #1e2a3a 0%, #0b1622 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #e63946;
+        }
+
+        .study-card-header h2 {
+            font-size: 2.2em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .study-card-header h2 small {
+            font-size: 0.5em;
+            background: #e63946;
+            padding: 5px 15px;
+            border-radius: 50px;
+        }
+
+        .close-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: #e63946;
+            transform: rotate(90deg);
+        }
+
+        .study-card-content {
+            padding: 30px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        /* Secciones de la tarjeta de estudio */
+        .card-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 6px solid;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4em;
+            color: #1e2a3a;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #eef2f6;
+        }
+
+        .section-title i {
+            font-size: 1.5em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            transition: transform 0.2s;
+        }
+
+        .info-item:hover {
+            transform: translateX(5px);
+            background: #fff;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+        }
+
+        .info-item strong {
+            display: block;
+            color: #e63946;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .peligro-tag {
+            display: inline-block;
+            background: #fee;
+            color: #e63946;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin: 3px;
+        }
+
+        .normativa-list {
+            list-style: none;
+        }
+
+        .normativa-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eef2f6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .normativa-list li:before {
+            content: "🔥";
+            color: #e63946;
+        }
+
+        .examen-tips {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .examen-tips h4 {
+            color: #856404;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* Colores de categorías */
+        .categoria.seguridad .categoria-header { background: #e63946; }
+        .categoria.salud .categoria-header { background: #2a9d8f; }
+        .categoria.organizacion .categoria-header { background: #e9c46a; color: #333; }
+        .categoria.especificas .categoria-header { background: #457b9d; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .study-card-header h2 {
+                font-size: 1.5em;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animación de pulso para normas importantes */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(230, 57, 70, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); }
+        }
+
+        .norma-card.importante {
+            animation: pulse 2s infinite;
+            background: #ffe5e5;
+        }
+   
