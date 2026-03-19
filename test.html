@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 STPS Academy - Examen Rápido para Bomberos</title>
+  
+</head>
+<body>
+    <div class="exam-header">
+        <h1>
+            🚒 STPS Academy
+            <span>EXAMEN RÁPIDO</span>
+        </h1>
+        <p style="font-size: 1.2em; opacity: 0.9;">Pon a prueba tus conocimientos de las NOM-STPS</p>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <i>📊</i>
+                <div>
+                    <div style="font-size: 1.2em; font-weight: bold;" id="stats-respondidas">0</div>
+                    <div style="font-size: 0.9em; opacity: 0.8;">Preguntas respondidas</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i>✅</i>
+                <div>
+                    <div style="font-size: 1.2em; font-weight: bold;" id="stats-correctas">0</div>
+                    <div style="font-size: 0.9em; opacity: 0.8;">Correctas</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i>❌</i>
+                <div>
+                    <div style="font-size: 1.2em; font-weight: bold;" id="stats-incorrectas">0</div>
+                    <div style="font-size: 0.9em; opacity: 0.8;">Incorrectas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <div class="exam-config">
+            <select class="config-select" id="numPreguntas">
+                <option value="5">5 preguntas</option>
+                <option value="10" selected>10 preguntas</option>
+                <option value="20">20 preguntas</option>
+                <option value="30">30 preguntas</option>
+                <option value="50">50 preguntas</option>
+            </select>
+            
+            <select class="config-select" id="categoriaExamen">
+                <option value="todas">Todas las categorías</option>
+                <option value="seguridad">🔧 Seguridad</option>
+                <option value="salud">❤️ Salud</option>
+                <option value="organizacion">📋 Organización</option>
+                <option value="especificas">🏭 Específicas</option>
+            </select>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-primary" onclick="iniciarExamen()">
+                <i>▶️</i> Iniciar Examen
+            </button>
+            <button class="btn btn-secondary" onclick="reiniciarExamen()">
+                <i>🔄</i> Reiniciar
+            </button>
+        </div>
+    </div>
+
+    <div id="examArea">
+        <!-- Aquí se renderiza el examen o resultados -->
+    </div>
+
+    <script>
+        // Base de preguntas basada en las normas
+        const bancoPreguntas = [
+            // NOM-001
+            {
+                pregunta: "¿Cuál es el ancho mínimo de los pasillos principales según NOM-001?",
+                opciones: ["60 cm", "90 cm", "120 cm", "150 cm"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-001",
+                explicacion: "La NOM-001 establece 90 cm como ancho mínimo para pasillos principales de circulación."
+            },
+            {
+                pregunta: "Las puertas de emergencia deben abrir hacia:",
+                opciones: ["Hacia adentro", "Hacia afuera", "Hacia ambos lados", "No importa la dirección"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-001",
+                explicacion: "Las puertas de emergencia siempre deben abrir hacia afuera para facilitar la evacuación."
+            },
+            
+            // NOM-002
+            {
+                pregunta: "¿Qué clase de fuego corresponde a líquidos inflamables?",
+                opciones: ["Clase A", "Clase B", "Clase C", "Clase D"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-002",
+                explicacion: "Clase B: líquidos inflamables (gasolina, aceites, pinturas). Clase A: sólidos, Clase C: eléctricos, Clase D: metales."
+            },
+            {
+                pregunta: "¿Cuál es el límite máximo de exposición a ruido sin protección para 8 horas?",
+                opciones: ["85 dB", "90 dB", "95 dB", "100 dB"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-011",
+                explicacion: "90 dB es el límite máximo permisible para 8 horas de exposición según NOM-011."
+            },
+            
+            // NOM-009
+            {
+                pregunta: "¿A partir de qué altura se considera trabajo en altura según NOM-009?",
+                opciones: ["1.50 m", "1.80 m", "2.00 m", "2.50 m"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-009",
+                explicacion: "La NOM-009 establece 1.80 metros como altura mínima para considerar trabajo en altura."
+            },
+            
+            // NOM-017
+            {
+                pregunta: "¿Qué color identifica la señal de prohibición?",
+                opciones: ["Verde", "Azul", "Rojo", "Amarillo"],
+                correcta: 2,
+                categoria: "organizacion",
+                norma: "NOM-026",
+                explicacion: "Rojo: prohibición y equipo contra incendio. Verde: seguridad. Azul: obligación. Amarillo: precaución."
+            },
+            
+            // NOM-005
+            {
+                pregunta: "En el rombo NFPA, ¿qué color indica riesgo a la salud?",
+                opciones: ["Rojo", "Azul", "Amarillo", "Blanco"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-005",
+                explicacion: "Azul = Salud, Rojo = Inflamabilidad, Amarillo = Reactividad, Blanco = Especial."
+            },
+            
+            // NOM-035
+            {
+                pregunta: "¿Cuál NO es un factor de riesgo psicosocial según NOM-035?",
+                opciones: ["Jornada laboral", "Violencia laboral", "Ruido excesivo", "Carga mental"],
+                correcta: 2,
+                categoria: "salud",
+                norma: "NOM-035",
+                explicacion: "Ruido excesivo es riesgo físico (NOM-011), no psicosocial. Los psicosociales son: ambiente, jornada, carga, liderazgo, violencia."
+            },
+            
+            // NOM-036
+            {
+                pregunta: "¿Cuál es el límite máximo de carga para hombres en levantamiento ocasional?",
+                opciones: ["15 kg", "20 kg", "25 kg", "30 kg"],
+                correcta: 2,
+                categoria: "salud",
+                norma: "NOM-036",
+                explicacion: "25 kg para hombres (ocasional), 15 kg para hombres (frecuente). Mujeres: 15 kg ocasional, 10 kg frecuente."
+            },
+            
+            // NOM-033
+            {
+                pregunta: "¿Cuál es el rango seguro de oxígeno en espacios confinados?",
+                opciones: ["18-22%", "19.5-23.5%", "20-24%", "21-25%"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-033",
+                explicacion: "El rango seguro es 19.5-23.5%. Menor a 19.5% es deficiente, mayor a 23.5% es enriquecido y peligroso."
+            },
+            
+            // NOM-020
+            {
+                pregunta: "¿A qué presión se realiza la prueba hidrostática de recipientes a presión?",
+                opciones: ["1.0 veces presión trabajo", "1.25 veces presión trabajo", "1.5 veces presión trabajo", "2.0 veces presión trabajo"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-020",
+                explicacion: "Prueba hidrostática: 1.5 veces la presión de trabajo según NOM-020."
+            },
+            
+            // NOM-022
+            {
+                pregunta: "¿Cuál debe ser la resistencia máxima de puesta a tierra?",
+                opciones: ["< 5 ohmios", "< 10 ohmios", "< 15 ohmios", "< 20 ohmios"],
+                correcta: 1,
+                categoria: "seguridad",
+                norma: "NOM-022",
+                explicacion: "La resistencia debe ser menor a 10 ohmios para disipar cargas electrostáticas."
+            },
+            
+            // NOM-010
+            {
+                pregunta: "¿Qué significa PPT en monitoreo de agentes químicos?",
+                opciones: ["Peligro Potencial Tóxico", "Promedio Ponderado en Tiempo", "Período de Prueba Técnica", "Punto de Prevención Total"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-010",
+                explicacion: "PPT = Promedio Ponderado en Tiempo para 8 horas de exposición."
+            },
+            
+            // NOM-018
+            {
+                pregunta: "¿Cuántas secciones tiene la Hoja de Datos de Seguridad (MSDS)?",
+                opciones: ["12", "14", "16", "18"],
+                correcta: 2,
+                categoria: "organizacion",
+                norma: "NOM-018",
+                explicacion: "La MSDS tiene 16 secciones según el Sistema Globalmente Armonizado (SGA)."
+            },
+            
+            // NOM-019
+            {
+                pregunta: "¿Cada cuándo deben reunirse las Comisiones Mixtas de Seguridad?",
+                opciones: ["Semanal", "Quincenal", "Mensual", "Bimestral"],
+                correcta: 2,
+                categoria: "organizacion",
+                norma: "NOM-019",
+                explicacion: "Las comisiones deben reunirse de manera mensual según NOM-019."
+            },
+            
+            // NOM-025
+            {
+                pregunta: "¿Qué nivel de iluminación se requiere para tareas normales?",
+                opciones: ["50-100 lux", "100-300 lux", "300-500 lux", "500-750 lux"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-025",
+                explicacion: "Tareas normales: 100-300 lux. Circulación: 20-50 lux. Tareas finas: 500-750 lux."
+            },
+            
+            // NOM-031
+            {
+                pregunta: "¿A partir de qué profundidad deben entibarse las excavaciones?",
+                opciones: ["1.0 m", "1.2 m", "1.5 m", "2.0 m"],
+                correcta: 2,
+                categoria: "especificas",
+                norma: "NOM-031",
+                explicacion: "Excavaciones mayores a 1.5 m requieren entibado o talud según NOM-031."
+            },
+            
+            // NOM-037
+            {
+                pregunta: "¿Cuál es la altura recomendada de la mesa para teletrabajo?",
+                opciones: ["60-70 cm", "70-80 cm", "80-90 cm", "90-100 cm"],
+                correcta: 1,
+                categoria: "especificas",
+                norma: "NOM-037",
+                explicacion: "La mesa debe tener una altura de 70-80 cm para ergonomía en teletrabajo."
+            },
+            
+            // NOM-023
+            {
+                pregunta: "¿A qué concentración de metano (grisú) se debe evacuar la mina?",
+                opciones: ["1.0%", "1.5%", "2.0%", "2.5%"],
+                correcta: 1,
+                categoria: "especificas",
+                norma: "NOM-023",
+                explicacion: "Alerta al 1%, evacuación obligatoria al 1.5% de metano."
+            },
+            
+            // NOM-029
+            {
+                pregunta: "¿Cuál es el primer paso del procedimiento LOTO?",
+                opciones: ["Aislar energía", "Bloquear", "Notificar", "Verificar"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-029",
+                explicacion: "LOTO: 1. Preparar/Notificar, 2. Apagar, 3. Aislar, 4. Bloquear, 5. Verificar."
+            },
+            
+            // NOM-027
+            {
+                pregunta: "¿Qué distancia mínima deben tener los combustibles de un área de soldadura?",
+                opciones: ["5 m", "8 m", "10 m", "12 m"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-027",
+                explicacion: "Distancia mínima de 10 metros de materiales combustibles en operaciones de soldadura."
+            },
+            
+            // NOM-014
+            {
+                pregunta: "¿A partir de qué altitud se considera 'gran altitud'?",
+                opciones: ["2000 msnm", "2500 msnm", "3000 msnm", "3500 msnm"],
+                correcta: 2,
+                categoria: "salud",
+                norma: "NOM-014",
+                explicacion: "Se considera gran altitud a partir de 3000 msnm según NOM-014."
+            },
+            
+            // NOM-024
+            {
+                pregunta: "¿Qué tipo de vibración afecta a operadores de vehículos pesados?",
+                opciones: ["Segmentaria", "Cuerpo entero", "Localizada", "Periférica"],
+                correcta: 1,
+                categoria: "salud",
+                norma: "NOM-024",
+                explicacion: "Vehículos pesados generan vibración de cuerpo entero. Herramientas manuales generan vibración segmentaria."
+            },
+            
+            // NOM-034
+            {
+                pregunta: "¿Cuál es el ancho mínimo de puertas para accesibilidad?",
+                opciones: ["0.60 m", "0.70 m", "0.80 m", "0.90 m"],
+                correcta: 2,
+                categoria: "seguridad",
+                norma: "NOM-034",
+                explicacion: "Puertas accesibles deben tener ancho mínimo de 0.80 m según NOM-034."
+            },
+            
+            // NOM-028
+            {
+                pregunta: "¿Qué metodología de análisis de riesgos usa 'desviaciones de parámetros'?",
+                opciones: ["What-If", "HAZOP", "Árbol de fallas", "Checklist"],
+                correcta: 1,
+                categoria: "organizacion",
+                norma: "NOM-028",
+                explicacion: "HAZOP analiza desviaciones de parámetros (presión, temperatura, flujo) con palabras guía."
+            },
+            
+            // NOM-003
+            {
+                pregunta: "¿Cuál es el período de reentrada típico después de aplicar plaguicidas?",
+                opciones: ["4-8 horas", "12-24 horas", "24-48 horas", "48-72 horas"],
+                correcta: 2,
+                categoria: "especificas",
+                norma: "NOM-003",
+                explicacion: "Período de reentrada típico de 24-48 horas después de aplicación de plaguicidas."
+            }
+        ];
+
+        let examenActual = [];
+        let respuestasUsuario = [];
+        let preguntaActual = 0;
+        let modoResultados = false;
+
+        function iniciarExamen() {
+            const numPreguntas = parseInt(document.getElementById('numPreguntas').value);
+            const categoria = document.getElementById('categoriaExamen').value;
+            
+            // Filtrar preguntas por categoría
+            let preguntasFiltradas = bancoPreguntas;
+            if (categoria !== 'todas') {
+                preguntasFiltradas = bancoPreguntas.filter(p => p.categoria === categoria);
+            }
+            
+            // Seleccionar preguntas aleatorias
+            examenActual = [...preguntasFiltradas]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, Math.min(numPreguntas, preguntasFiltradas.length));
+            
+            respuestasUsuario = new Array(examenActual.length).fill(null);
+            preguntaActual = 0;
+            modoResultados = false;
+            
+            renderizarExamen();
+            actualizarStats();
+        }
+
+        function renderizarExamen() {
+            const area = document.getElementById('examArea');
+            
+            if (examenActual.length === 0) {
+                area.innerHTML = `
+                    <div class="exam-container" style="text-align: center; padding: 60px;">
+                        <i style="font-size: 4em; color: #e63946;">📚</i>
+                        <h2 style="margin: 20px 0;">No hay preguntas disponibles</h2>
+                        <p>Selecciona otra categoría o inicia el examen</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (modoResultados) {
+                mostrarResultados();
+                return;
+            }
+
+            const pregunta = examenActual[preguntaActual];
+            const progreso = ((preguntaActual + 1) / examenActual.length) * 100;
+            
+            area.innerHTML = `
+                <div class="exam-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progreso}%"></div>
+                    </div>
+                    
+                    <div class="question-header">
+                        <span class="question-number">Pregunta ${preguntaActual + 1}/${examenActual.length}</span>
+                        <span class="question-category">${pregunta.categoria.toUpperCase()} · ${pregunta.norma}</span>
+                    </div>
+                    
+                    <div class="question-text">${pregunta.pregunta}</div>
+                    
+                    <div class="options-grid" id="opcionesContainer">
+                        ${pregunta.opciones.map((opcion, idx) => `
+                            <div class="option ${respuestasUsuario[preguntaActual] === idx ? 'selected' : ''}" onclick="seleccionarOpcion(${idx})">
+                                <span class="option-marker">${String.fromCharCode(65 + idx)}</span>
+                                <span>${opcion}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="navigation-buttons">
+                        <button class="btn btn-secondary" onclick="cambiarPregunta(-1)" ${preguntaActual === 0 ? 'disabled' : ''}>
+                            <i>◀</i> Anterior
+                        </button>
+                        
+                        ${preguntaActual === examenActual.length - 1 ? 
+                            '<button class="btn btn-success" onclick="finalizarExamen()"><i>✅</i> Finalizar Examen</button>' :
+                            '<button class="btn btn-primary" onclick="cambiarPregunta(1)">Siguiente <i>▶</i></button>'
+                        }
+                    </div>
+                </div>
+            `;
+        }
+
+        window.seleccionarOpcion = function(opcionIdx) {
+            respuestasUsuario[preguntaActual] = opcionIdx;
+            actualizarStats();
+            renderizarExamen();
+        };
+
+        window.cambiarPregunta = function(direccion) {
+            const nuevaPregunta = preguntaActual + direccion;
+            if (nuevaPregunta >= 0 && nuevaPregunta < examenActual.length) {
+                preguntaActual = nuevaPregunta;
+                renderizarExamen();
+            }
+        };
+
+        window.finalizarExamen = function() {
+            modoResultados = true;
+            renderizarExamen();
+        };
+
+        function mostrarResultados() {
+            const respondidas = respuestasUsuario.filter(r => r !== null).length;
+            const correctas = respuestasUsuario.reduce((acc, respuesta, idx) => {
+                return acc + (respuesta === examenActual[idx].correcta ? 1 : 0);
+            }, 0);
+            const incorrectas = respondidas - correctas;
+            const porcentaje = respondidas > 0 ? Math.round((correctas / respondidas) * 100) : 0;
+
+            const respuestasRevisar = examenActual.map((pregunta, idx) => ({
+                ...pregunta,
+                usuario: respuestasUsuario[idx],
+                esCorrecta: respuestasUsuario[idx] === pregunta.correcta
+            }));
+
+            const area = document.getElementById('examArea');
+            
+            area.innerHTML = `
+                <div class="results-container">
+                    <h2 style="color: #1e2a3a;">📊 Resultados del Examen</h2>
+                    
+                    <div class="score-circle">
+                        <span class="score-number">${porcentaje}%</span>
+                        <span class="score-label">Calificación</span>
+                    </div>
+                    
+                    <div class="result-details">
+                        <div class="result-card correct">
+                            <h3>${correctas}</h3>
+                            <p>Correctas</p>
+                        </div>
+                        <div class="result-card incorrect">
+                            <h3>${incorrectas}</h3>
+                            <p>Incorrectas</p>
+                        </div>
+                        <div class="result-card" style="border-color: #1e2a3a;">
+                            <h3>${respondidas}</h3>
+                            <p>Respondidas</p>
+                        </div>
+                    </div>
+                    
+                    ${respondidas < examenActual.length ? 
+                        `<p style="color: #e63946; margin-bottom: 20px;">
+                            ⚠️ Te faltaron ${examenActual.length - respondidas} preguntas por responder
+                        </p>` : ''}
+                    
+                    <h3 style="text-align: left; margin-top: 30px;">📝 Revisión de respuestas</h3>
+                    <div class="review-list">
+                        ${respuestasRevisar.map((item, idx) => `
+                            <div class="review-item ${item.esCorrecta ? 'correct' : 'incorrect'}">
+                                <div class="review-icon">${item.esCorrecta ? '✅' : '❌'}</div>
+                                <div style="flex: 1">
+                                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                        <strong>Pregunta ${idx + 1}</strong>
+                                        <span class="badge-fire">${item.norma}</span>
+                                    </div>
+                                    <p style="margin: 8px 0;">${item.pregunta}</p>
+                                    <p style="color: ${item.esCorrecta ? '#2a9d8f' : '#e63946'}; font-size: 0.9em;">
+                                        <strong>Tu respuesta:</strong> ${item.usuario !== null ? 
+                                            `${String.fromCharCode(65 + item.usuario)}. ${item.opciones[item.usuario]}` : 
+                                            'No respondida'}
+                                    </p>
+                                    ${!item.esCorrecta ? 
+                                        `<p style="color: #2a9d8f; font-size: 0.9em;">
+                                            <strong>Respuesta correcta:</strong> 
+                                            ${String.fromCharCode(65 + item.correcta)}. ${item.opciones[item.correcta]}
+                                        </p>` : ''}
+                                    <p style="color: #666; font-size: 0.9em; margin-top: 5px; padding-top: 5px; border-top: 1px dashed #ddd;">
+                                        <em>💡 ${item.explicacion}</em>
+                                    </p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                        <button class="btn btn-primary" onclick="iniciarExamen()">
+                            <i>🔄</i> Nuevo Examen
+                        </button>
+                        <button class="btn btn-secondary" onclick="reiniciarExamen()">
+                            <i>🏠</i> Volver al inicio
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.reiniciarExamen = function() {
+            examenActual = [];
+            respuestasUsuario = [];
+            preguntaActual = 0;
+            modoResultados = false;
+            
+            document.getElementById('examArea').innerHTML = `
+                <div class="exam-container" style="text-align: center; padding: 60px;">
+                    <i style="font-size: 4em; color: #e63946;">📝</i>
+                    <h2 style="margin: 20px 0;">Listo para comenzar</h2>
+                    <p>Selecciona la cantidad de preguntas y categoría, luego haz clic en "Iniciar Examen"</p>
+                    <button class="btn btn-primary" onclick="iniciarExamen()" style="margin: 20px auto;">
+                        <i>▶️</i> Comenzar ahora
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('stats-respondidas').textContent = '0';
+            document.getElementById('stats-correctas').textContent = '0';
+            document.getElementById('stats-incorrectas').textContent = '0';
+        };
+
+        function actualizarStats() {
+            const respondidas = respuestasUsuario.filter(r => r !== null).length;
+            const correctas = respuestasUsuario.reduce((acc, respuesta, idx) => {
+                return acc + (respuesta === examenActual[idx]?.correcta ? 1 : 0);
+            }, 0);
+            const incorrectas = respondidas - correctas;
+            
+            document.getElementById('stats-respondidas').textContent = respondidas;
+            document.getElementById('stats-correctas').textContent = correctas;
+            document.getElementById('stats-incorrectas').textContent = incorrectas;
+        }
+
+        // Inicializar
+        reiniciarExamen();
+    </script>
+</body>
+</html>
